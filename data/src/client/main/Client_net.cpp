@@ -19,7 +19,7 @@ Client_net::Client_net(Game* game)
 
 int Client_net::SetUpClient(char *hostName,int *clientID,int *num,char clientNames[][MAX_NAME_SIZE])
 {
-    mClient_command = mGame -> getClient_command();
+    mClient_command = mGame -> GetClient_command();
 
     struct hostent	*servHost;
     struct sockaddr_in	server;

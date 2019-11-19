@@ -1,7 +1,11 @@
 #include "Game.h"
+#include "./Actor.h"
+#include "./Client_window.h"
+#include <algorithm>
 
 Game::Game()
 :mEndFlag(1)
+,mUpdatingActors(false)
 {
 }
 
@@ -31,12 +35,12 @@ bool Game::Initialize(int argc, char* argv[])
 
     /* サーバーとの接続 */
     if(mNet->SetUpClient(serverName,&clientID,&mNum,name)==-1){
-		fprintf(stderr,"setup failed : SetUpClient\n");
+		fprintf(stderr,"Setup failed : SetUpClient\n");
 		return -1;
 	}
     /* ウインドウの初期化 */
 	if(!mWindow->InitWindows(clientID,mNum,name)){
-		fprintf(stderr,"setup failed : InitWindows\n");
+		fprintf(stderr,"Setup failed : InitWindows\n");
 		return -1;
     }
 
@@ -74,7 +78,7 @@ void Game::Shutdown()
 void Game::ProcessInput()
 {
     // 試験的な実装
-	mWindow->WindowEvent(mNum);
+	// mWindow->WindowEvent(mNum);
     NetworkEvent(&mEndFlag);
 }
 
@@ -89,7 +93,73 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 	mTicksCount = SDL_GetTicks();
+
+    // Update all actors
+	mUpdatingActors = true;
+	for (auto actor : mActors)
+	{
+		actor->Update(deltaTime);
+	}
+	mUpdatingActors = false;
+
+	// Move any pending actors to mActors
+	for (auto pending : mPendingActors)
+	{
+		mActors.emplace_back(pending);
+	}
+	mPendingActors.clear();
+
+	// Add any dead actors to a temp vector
+	std::vector<Actor*> deadActors;
+	for (auto actor : mActors)
+	{
+		if (actor->GetState() == Actor::EDead)
+		{
+			deadActors.emplace_back(actor);
+		}
+	}
+
+	// Delete dead actors (which removes them from mActors)
+	for (auto actor : deadActors)
+	{
+		delete actor;
+	}
 }
+
+void Game::AddActor(Actor* actor)
+{
+	// If we're updating actors, need to add to pending
+	if (mUpdatingActors)
+	{
+		mPendingActors.emplace_back(actor);
+	}
+	else
+	{
+		mActors.emplace_back(actor);
+	}
+}
+
+void Game::RemoveActor(Actor* actor)
+{
+	// Is it in pending actors?
+	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
+	if (iter != mPendingActors.end())
+	{
+		// Swap to end of vector and pop off (avoid erase copies)
+		std::iter_swap(iter, mPendingActors.end() - 1);
+		mPendingActors.pop_back();
+	}
+
+	// Is it in actors?
+	iter = std::find(mActors.begin(), mActors.end(), actor);
+	if (iter != mActors.end())
+	{
+		// Swap to end of vector and pop off (avoid erase copies)
+		std::iter_swap(iter, mActors.end() - 1);
+		mActors.pop_back();
+	}
+}
+
 
 void Game::GenerateOutput()
 {

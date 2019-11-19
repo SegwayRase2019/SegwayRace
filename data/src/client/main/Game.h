@@ -19,11 +19,14 @@ public:
     // Create Thread
     bool CreateTread(SDL_ThreadFunction fc, const char* name);
 
-    // getter
-    class Client_net* getClient_net(void)const{ return mNet; }
-    class Client_window* getClient_window(void)const{ return mWindow; }
-    class Client_command* getClient_command(void)const{ return mCommand; }
-    int getEndFlag(void){ return mEndFlag; }
+    void AddActor(class Actor* actor);
+    void RemoveActor(class Actor* actor);
+
+    // Getter
+    class Client_net* GetClient_net(void)const{ return mNet; }
+    class Client_window* GetClient_window(void)const{ return mWindow; }
+    class Client_command* GetClient_command(void)const{ return mCommand; }
+    int GetEndFlag(void){ return mEndFlag; }
 
 private:
     class Client_net *mNet;
@@ -42,7 +45,11 @@ private:
 
     int NetworkEvent(void* data);
 
-    //
+    // All the actors in the game
+	std::vector<class Actor*> mActors;
+	// Any pending actors
+	std::vector<class Actor*> mPendingActors;
+
     //*static*/ int NetworkEvent(void *data);
 
     // Number of ticks since start of game
@@ -50,6 +57,10 @@ private:
     // Game should continue to run
     bool mIsRunning;
     int mEndFlag;
+
+    // Track if we're updating actors right now
+	bool mUpdatingActors;
+
     // 以下は必要ない変数
     int mNum;
 };
