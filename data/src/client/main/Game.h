@@ -6,36 +6,40 @@
 #include <vector>
 
 // Game class
-class Game {
-public:
+class Game
+{
+  public:
     Game();
     // Initialize the game
-    bool Initialize(int, char* []);
+    bool Initialize(int, char *[]);
     // Runs the game loop until the game is over
     void RunLoop();
     // Shutdown the game
     void Shutdown();
 
     // Create Thread
-    bool CreateTread(SDL_ThreadFunction fc, const char* name);
+    bool CreateTread(SDL_ThreadFunction fc, const char *name);
 
-    void AddActor(class Actor* actor);
-    void RemoveActor(class Actor* actor);
+    void AddActor(class Actor *actor);
+    void RemoveActor(class Actor *actor);
+
+    void AddSprite(class SpriteComponent *sprite);
+    void RemoveSprite(class SpriteComponent *sprite);
 
     // Getter
-    class Client_net* GetClient_net(void)const{ return mNet; }
-    class Client_window* GetClient_window(void)const{ return mWindow; }
-    class Client_command* GetClient_command(void)const{ return mCommand; }
-    int GetEndFlag(void){ return mEndFlag; }
+    class Client_net *GetClient_net(void) const { return mNet; }
+    class Client_window *GetClient_window(void) const { return mWindow; }
+    class Client_command *GetClient_command(void) const { return mCommand; }
+    int GetEndFlag(void) { return mEndFlag; }
 
-private:
+  private:
     class Client_net *mNet;
     class Client_command *mCommand;
     class Client_window *mWindow;
 
     // network thread
-	SDL_Thread	*thr;
-    
+    SDL_Thread *thr;
+
     // Helper functions for the game loop
     void ProcessInput();
     // Update
@@ -43,12 +47,15 @@ private:
     //Draw Renderer
     void GenerateOutput();
 
-    int NetworkEvent(void* data);
+    int NetworkEvent(void *data);
 
     // All the actors in the game
-	std::vector<class Actor*> mActors;
-	// Any pending actors
-	std::vector<class Actor*> mPendingActors;
+    std::vector<class Actor *> mActors;
+    // Any pending actors
+    std::vector<class Actor *> mPendingActors;
+
+    // All the sprite components drawn
+    std::vector<class SpriteComponent *> mSprites;
 
     //*static*/ int NetworkEvent(void *data);
 
@@ -59,7 +66,7 @@ private:
     int mEndFlag;
 
     // Track if we're updating actors right now
-	bool mUpdatingActors;
+    bool mUpdatingActors;
 
     // 以下は必要ない変数
     int mNum;
