@@ -1,6 +1,6 @@
-#include "SpriteComponent.h"
-#include "Actor.h"
-#include "Game.h"
+#include "./SpriteComponent.h"
+#include "../actor/Actor.h"
+#include "../main/Game.h"
 
 SpriteComponent::SpriteComponent(Actor *owner, int drawOrder)
     : Component(owner), mTexture(nullptr), mDrawOrder(drawOrder), mTexWidth(0), mTexHeight(0)

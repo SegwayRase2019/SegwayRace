@@ -1,6 +1,6 @@
 #include "./Actor.h"
-#include "./Game.h"
-#include "./Component.h"
+#include "../main/Game.h"
+#include "../component/Component.h"
 #include <algorithm>
 
 Actor::Actor(Game *game)
@@ -41,7 +41,7 @@ void Actor::UpdateActor(float deltaTime)
 {
 }
 
-void Actor::ProcessInput(const char command)
+void Actor::ProcessInput(const uint8_t* command)
 {
     if (mState == EActive)
     {
@@ -55,7 +55,7 @@ void Actor::ProcessInput(const char command)
     }
 }
 
-void Actor::ActorInput(const char command)
+void Actor::ActorInput(const uint8_t* command)
 {
 }
 

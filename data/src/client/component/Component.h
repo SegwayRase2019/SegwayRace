@@ -12,7 +12,7 @@ public:
   // アップデート
   virtual void Update(float deltaTime);
   // 入力処理
-  virtual void ProcessInput(const char command) {}
+  virtual void ProcessInput(const uint8_t* keyState) {}
 
   // ゲッター
   class Actor *GetOwner() { return mOwner; }

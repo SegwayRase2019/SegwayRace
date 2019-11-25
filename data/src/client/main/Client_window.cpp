@@ -1,7 +1,9 @@
-#include "Client_window.h"
+#include "./Client_window.h"
+#include "../component/SpriteComponent.h"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
+#include <algorithm>
 
 static SDL_Rect gButtonRect[MAX_CLIENTS + 2];
 
@@ -145,4 +147,42 @@ SDL_Texture *Client_window::GetTexture(const std::string &filename)
 		mTextures.emplace(filename.c_str(), tex);
 	}
 	return tex;
+}
+
+void Client_window::AddSprite(SpriteComponent *sprite)
+{
+	int myDrawOrder = sprite -> GetDrawOrder();
+	auto iter = mSprites.begin();
+	for (;
+		 iter != mSprites.end();
+		 ++iter)
+	{
+		if (myDrawOrder < (*iter) -> GetDrawOrder())
+		{
+			break;
+		}
+	}
+
+	mSprites.insert(iter, sprite);
+}
+
+void Client_window::RemoveSprite(SpriteComponent *sprite)
+{
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	mSprites.erase(iter);
+}
+
+
+void Client_window::Draw()
+{
+	SDL_SetRenderDrawColor(mRenderer, 220, 220, 220, 255);
+	SDL_RenderClear(mRenderer);
+
+	// Draw all sprite components
+	for (auto sprite : mSprites)
+	{
+		sprite->Draw(mRenderer);
+	}
+
+	SDL_RenderPresent(mRenderer);
 }

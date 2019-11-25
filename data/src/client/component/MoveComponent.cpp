@@ -1,5 +1,5 @@
 #include "./MoveComponent.h"
-#include "./Actor.h"
+#include "../actor/Actor.h"
 
 MoveComponent::MoveComponent(class Actor *owner, int updateOrder)
     : Component(owner, updateOrder), mAngularSpeed(0.0f), mForwardSpeed(0.0f)

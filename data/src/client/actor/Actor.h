@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Math.h"
+#include "../../common/math/Math.h"
 #include <cstdint>
 
 class Actor
@@ -20,8 +20,8 @@ public:
   void UpdateComponents(float deltaTime);
   virtual void UpdateActor(float deltaTime);
 
-  void ProcessInput(const char command);
-  virtual void ActorInput(const char command);
+  void ProcessInput(const uint8_t* command);
+  virtual void ActorInput(const uint8_t* command);
 
   // Getter/Setter
   const Vector2 &GetPosition() const { return mPosition; }

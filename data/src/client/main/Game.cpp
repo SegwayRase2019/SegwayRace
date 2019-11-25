@@ -1,8 +1,8 @@
 #include "Game.h"
-#include "./Actor.h"
 #include "./Client_window.h"
-#include "./SpriteComponent.h"
+#include "../actor/Racer.h"
 #include <algorithm>
+
 
 Game::Game()
 	: mEndFlag(1), mUpdatingActors(false)
@@ -54,6 +54,8 @@ bool Game::Initialize(int argc, char *argv[])
 
 	mTicksCount = SDL_GetTicks();
 
+	class Racer* player = new Racer(this);
+
 	return true;
 }
 
@@ -61,7 +63,7 @@ void Game::RunLoop()
 {
 	ProcessInput();
 	UpdateGame();
-	//GenerateOutput();
+	GenerateOutput();
 }
 
 void Game::Shutdown()
@@ -78,9 +80,27 @@ void Game::Shutdown()
 
 void Game::ProcessInput()
 {
-	// 試験的な実装
-	// mWindow->WindowEvent(mNum);
 	NetworkEvent(&mEndFlag);
+
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+			case SDL_QUIT:
+				mEndFlag = false;
+				break;
+		}
+	}
+	
+	const Uint8* keyState = SDL_GetKeyboardState(NULL);
+
+	mUpdatingActors = true;
+	for (auto actor : mActors)
+	{
+		actor->ProcessInput(keyState);
+	}
+	mUpdatingActors = false;
 }
 
 void Game::UpdateGame()
@@ -120,7 +140,6 @@ void Game::UpdateGame()
 		}
 	}
 
-	// Delete dead actors (which removes them from mActors)
 	for (auto actor : deadActors)
 	{
 		delete actor;
@@ -163,29 +182,17 @@ void Game::RemoveActor(Actor *actor)
 
 void Game::AddSprite(SpriteComponent *sprite)
 {
-	int myDrawOrder = sprite->GetDrawOrder();
-	auto iter = mSprites.begin();
-	for (;
-		 iter != mSprites.end();
-		 ++iter)
-	{
-		if (myDrawOrder < (*iter)->GetDrawOrder())
-		{
-			break;
-		}
-	}
-
-	mSprites.insert(iter, sprite);
+	mWindow -> AddSprite(sprite);
 }
 
 void Game::RemoveSprite(SpriteComponent *sprite)
 {
-	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
-	mSprites.erase(iter);
+	mWindow -> RemoveSprite(sprite);
 }
 
 void Game::GenerateOutput()
 {
+	mWindow -> Draw();
 }
 
 /*****************************************************************

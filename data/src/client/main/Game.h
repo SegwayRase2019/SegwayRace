@@ -1,6 +1,6 @@
 #pragma once
 #include "../../common/Common.h"
-#include "Client_func.h"
+#include "./Client_func.h"
 #include "./Client_net.h"
 #include <SDL2/SDL_ttf.h>
 #include <vector>
@@ -34,8 +34,8 @@ class Game
 
   private:
     class Client_net *mNet;
-    class Client_command *mCommand;
     class Client_window *mWindow;
+    class Client_command *mCommand;
 
     // network thread
     SDL_Thread *thr;
@@ -53,9 +53,6 @@ class Game
     std::vector<class Actor *> mActors;
     // Any pending actors
     std::vector<class Actor *> mPendingActors;
-
-    // All the sprite components drawn
-    std::vector<class SpriteComponent *> mSprites;
 
     //*static*/ int NetworkEvent(void *data);
 

@@ -1,4 +1,4 @@
-#include"Client_func.h"
+#include"./Client_func.h"
 
 Client_command::Client_command(Game* game)
 {

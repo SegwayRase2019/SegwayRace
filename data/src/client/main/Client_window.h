@@ -15,6 +15,9 @@ public:
   void DestroyWindow(void);
   void UnloadData();
 
+  void AddSprite(class SpriteComponent *sprite);
+  void RemoveSprite(class SpriteComponent *sprite);
+
   void Draw();
 
   SDL_Texture *GetTexture(const std::string &filename);
@@ -25,7 +28,8 @@ private:
   class Game *mGame;
   class Client_command *mClient_command;
 
-  std::unordered_map<std::string, SDL_Texture *> mTextures;
+  // All the sprite components drawn
+  std::vector<class SpriteComponent *> mSprites;
 
-  int CheckButtonNO(int, int, int);
+  std::unordered_map<std::string, SDL_Texture *> mTextures;
 };
