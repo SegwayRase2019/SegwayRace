@@ -1,4 +1,4 @@
-#include"Client_func.h"
+#include"./Client_func.h"
 
 Client_command::Client_command(Game* game)
 {
@@ -7,8 +7,8 @@ Client_command::Client_command(Game* game)
 
 int Client_command::ExecuteCommand(char command)
 {
-    mClient_net = mGame -> getClient_net();
-    mWindow = mGame -> getClient_window();
+    mClient_net = mGame -> GetClient_net();
+    mWindow = mGame -> GetClient_window();
 
     int	endFlag = 1;
 #ifndef NDEBUG
@@ -126,9 +126,6 @@ void Client_command::RecvCircleData(void)
     mClient_net->RecvIntData(&x);
     mClient_net->RecvIntData(&y);
     mClient_net->RecvIntData(&r);
-
-    /* 円を表示する */
-    mWindow->DrawCircle(x,y,r);
 }
 
 void Client_command::RecvRectangleData(void)
@@ -140,9 +137,6 @@ void Client_command::RecvRectangleData(void)
     mClient_net->RecvIntData(&y);
     mClient_net->RecvIntData(&width);
     mClient_net->RecvIntData(&height);
-
-    /* 四角を表示する */
-    mWindow->DrawRectangle(x,y,width,height);
 }
 
 void Client_command::RecvDiamondData(void)
@@ -153,7 +147,4 @@ void Client_command::RecvDiamondData(void)
     mClient_net->RecvIntData(&x);
     mClient_net->RecvIntData(&y);
     mClient_net->RecvIntData(&height);
-
-    /* 菱形を表示する */
-    mWindow->DrawDiamond(x,y,height);
 }

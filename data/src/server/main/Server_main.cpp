@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 
 	/* クライアントとの接続 */
 	if(net->SetUpServer(num) == -1){
-		fprintf(stderr,"Cannot setup server\n");
+		fprintf(stderr,"Cannot Setup server\n");
 		exit(-1);
 	}
 	
