@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "./Client_window.h"
 #include "../actor/Racer.h"
+#include "../actor/Stage.h"
 #include <algorithm>
-
 
 Game::Game()
 	: mEndFlag(1), mUpdatingActors(false)
@@ -54,7 +54,8 @@ bool Game::Initialize(int argc, char *argv[])
 
 	mTicksCount = SDL_GetTicks();
 
-	class Racer* player = new Racer(this);
+	class Racer *player = new Racer(this);
+	class Stage *stage = new Stage(this);
 
 	return true;
 }
@@ -87,13 +88,13 @@ void Game::ProcessInput()
 	{
 		switch (event.type)
 		{
-			case SDL_QUIT:
-				mEndFlag = false;
-				break;
+		case SDL_QUIT:
+			mEndFlag = false;
+			break;
 		}
 	}
-	
-	const Uint8* keyState = SDL_GetKeyboardState(NULL);
+
+	const Uint8 *keyState = SDL_GetKeyboardState(NULL);
 
 	mUpdatingActors = true;
 	for (auto actor : mActors)
@@ -182,17 +183,17 @@ void Game::RemoveActor(Actor *actor)
 
 void Game::AddSprite(SpriteComponent *sprite)
 {
-	mWindow -> AddSprite(sprite);
+	mWindow->AddSprite(sprite);
 }
 
 void Game::RemoveSprite(SpriteComponent *sprite)
 {
-	mWindow -> RemoveSprite(sprite);
+	mWindow->RemoveSprite(sprite);
 }
 
 void Game::GenerateOutput()
 {
-	mWindow -> Draw();
+	mWindow->Draw();
 }
 
 /*****************************************************************

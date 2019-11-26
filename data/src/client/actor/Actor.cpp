@@ -41,7 +41,7 @@ void Actor::UpdateActor(float deltaTime)
 {
 }
 
-void Actor::ProcessInput(const uint8_t* command)
+void Actor::ProcessInput(const uint8_t *command)
 {
     if (mState == EActive)
     {
@@ -55,7 +55,7 @@ void Actor::ProcessInput(const uint8_t* command)
     }
 }
 
-void Actor::ActorInput(const uint8_t* command)
+void Actor::ActorInput(const uint8_t *command)
 {
 }
 
