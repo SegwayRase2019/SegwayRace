@@ -12,7 +12,11 @@ int main(int argc,char *argv[])
     }
 	
 	/* メインループ */
+<<<<<<< HEAD
     while(game -> GetEndFlag()){
+=======
+    while(game -> getEndFlag()){
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 		game -> RunLoop();
     };
 

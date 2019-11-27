@@ -43,5 +43,10 @@
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
+<<<<<<< HEAD
     "C_Cpp.errorSquiggles": "Disabled"
+=======
+    "C_Cpp.errorSquiggles": "Disabled",
+    "git.ignoreLimitWarning": true
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
