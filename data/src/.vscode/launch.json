@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/../build/server.out",
             "args": [
-                "1"
+                "2"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
