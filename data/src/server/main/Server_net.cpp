@@ -18,6 +18,7 @@ Server_net::Server_net()
     mServer_command = new Server_command(this);
 }
 
+/*変数の宣言*/
 CLIENT Server_net::mClients[MAX_CLIENTS];
 int Server_net::endFlag = 1;
 int Server_net::gClientNum;
@@ -25,7 +26,6 @@ int Server_net::gWidth;
 fd_set Server_net::gMask;
 timeval Server_net::tv;
 bool Server_net::running;
-
 static int request_soc;
 
 int Server_net::SetUpServer(int num)
@@ -93,7 +93,6 @@ int Server_net::SetUpServer(int num)
 
 int Server_net::SendRecvManager()
 {
-    char command;
     int i;
     int retval;
     fd_set readOK;
@@ -108,37 +107,20 @@ int Server_net::SendRecvManager()
     }
     else if (retval)
     {
-
         for (i = 0; i < gClientNum; i++)
         {
-
             if (FD_ISSET(mClients[i].fd, &readOK))
             {
-                /* クライアントからデータが届いていた */
-                /* コマンドを読み込む */
-                RecvData(i, &command, sizeof(char));
+
                 /* コマンドに対する処理を行う */
-                endFlag = Server_command::ExecuteCommand(command, i);
-                if (endFlag == 0)
-                    break;
+                endFlag = Server_command::ExecuteCommand(i);
             }
+            if (endFlag == 0)
+                break;
         }
     }
+
     return endFlag;
-}
-
-int Server_net::RecvIntData(int pos, int *intData)
-{
-    int n, tmp;
-
-    /* 引き数チェック */
-    assert(0 <= pos && pos < gClientNum);
-    assert(intData != NULL);
-
-    n = RecvData(pos, &tmp, sizeof(int));
-    (*intData) = ntohl(tmp);
-
-    return n;
 }
 
 void Server_net::SendData(int pos, void *data, int dataSize)
@@ -191,6 +173,7 @@ int Server_net::MultiAccept(int request_soc, int num)
         }
         else
         {
+            /* スレッドの作成*/
             thr = SDL_CreateThread(NetworkEvent, "NetworkThread", &endFlag);
             Enter(i, fd);
         }
@@ -200,11 +183,9 @@ int Server_net::MultiAccept(int request_soc, int num)
 
 void Server_net::Enter(int pos, int fd)
 {
-    /* クライアントのユーザー名を受信する */
-    read(fd, mClients[pos].name, MAX_NAME_SIZE);
-#ifndef NDEBUG
-    printf("%s is accepted\n", mClients[pos].name);
-#endif
+
+    printf("プレイヤーID%dさんが入室しました\n", pos);
+
     mClients[pos].fd = fd;
 }
 
@@ -238,18 +219,20 @@ void Server_net::SendAllName(void)
 
 int Server_net::RecvData(int pos, void *data, int dataSize)
 {
-    int n;
 
-    /* 引き数チェック */
     assert(0 <= pos && pos < gClientNum);
     assert(data != NULL);
     assert(0 < dataSize);
 
-    n = read(mClients[pos].fd, data, dataSize);
-
-    return n;
+    return read(mClients[pos].fd, data, dataSize);
 }
 
+/*****************************************************************
+関数名  : NetworkEvent
+機能    : ネットワークのイベントループ
+引数    : void		*data		: 終了判定フラグ
+出力    : スレッド終了時に０を返す
+*****************************************************************/
 int Server_net::NetworkEvent(void *data)
 {
     int *endflag;

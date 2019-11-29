@@ -186,11 +186,9 @@ void Client_window::WindowEvent(int num)
 #endif
 				if (0 <= buttonNO && buttonNO < num)
 				{
-					/* 名前の書かれたボタンが押された */
 				}
 				else if (buttonNO == num)
 				{
-					/* 「All」と書かれたボタンが押された */
 				}
 				else if (buttonNO == num + 1)
 				{

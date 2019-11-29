@@ -8,49 +8,48 @@
 // Game class
 class Game
 {
-  public:
-    Game();
-    // Initialize the game
-    bool Initialize(int, char *[]);
-    // Runs the game loop until the game is over
-    void RunLoop();
-    // Shutdown the game
-    void Shutdown();
+public:
+  Game();
+  // Initialize the game
+  bool Initialize(int, char *[]);
+  // Runs the game loop until the game is over
+  void RunLoop();
+  // Shutdown the game
+  void Shutdown();
 
-    // Create Thread
-    bool CreateTread(SDL_ThreadFunction fc, const char *name);
+  static int clientID;
 
-    // getter
-    class Client_net *getClient_net(void) const { return mNet; }
-    class Client_window *getClient_window(void) const { return mWindow; }
-    class Client_command *getClient_command(void) const { return mCommand; }
-    int getEndFlag(void) { return mEndFlag; }
+  // Create Thread
+  bool CreateTread(SDL_ThreadFunction fc, const char *name);
 
-  private:
-    class Client_net *mNet;
-    class Client_command *mCommand;
-    class Client_window *mWindow;
+  // getter
+  class Client_net *getClient_net(void) const { return mNet; }
+  class Client_window *getClient_window(void) const { return mWindow; }
+  class Client_command *getClient_command(void) const { return mCommand; }
+  int getEndFlag(void) { return mEndFlag; }
 
-    // network thread
-    SDL_Thread *thr;
+private:
+  class Client_net *mNet;
+  class Client_command *mCommand;
+  class Client_window *mWindow;
 
-    // Helper functions for the game loop
-    void ProcessInput();
-    // Update
-    void UpdateGame();
-    //Draw Renderer
-    void GenerateOutput();
+  // network thread
+  SDL_Thread *thr;
 
-    static int NetworkEvent(void *data);
+  // Helper functions for the game loop
+  void ProcessInput();
+  // Update
+  void UpdateGame();
+  //Draw Renderer
+  void GenerateOutput();
 
-    //
-    //*static*/ int NetworkEvent(void *data);
+  static int NetworkEvent(void *data);
 
-    // Number of ticks since start of game
-    Uint32 mTicksCount;
-    // Game should continue to run
-    bool mIsRunning;
-    int mEndFlag;
-    // 以下は必要ない変数
-    int mNum;
+  // Number of ticks since start of game
+  Uint32 mTicksCount;
+  // Game should continue to run
+  bool mIsRunning;
+  int mEndFlag;
+  // 以下は必要ない変数
+  int mNum;
 };

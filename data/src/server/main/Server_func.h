@@ -49,14 +49,8 @@ class Server_command
 {
 public:
   Server_command(class Server_net *net);
-  static int ExecuteCommand(char, int);
-  void SendDiamondCommand(void);
+  static int ExecuteCommand(int pos);
   int strage = 0;
-
-private:
-  void SetIntData2DataBlock(void *, int, int *);
-  static void SetCharData2DataBlock(void *, char, int *);
-  int GetRandomInt(int);
 
 private:
   class Server_net *mServer_net;

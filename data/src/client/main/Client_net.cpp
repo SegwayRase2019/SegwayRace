@@ -58,17 +58,6 @@ int Client_net::SetUpClient(char *hostName, int *clientID, int *num, char client
     }
     fprintf(stderr, "connected\n");
 
-    /* 名前を読み込みサーバーに送る */
-
-    do
-    {
-        printf("Enter Your Name\n");
-        fgets(str, BUF_SIZE, stdin);
-        len = strlen(str) - 1;
-        str[len] = '\0';
-    } while (len > MAX_NAME_SIZE - 1 || len == 0);
-    SendData(str, MAX_NAME_SIZE);
-
     printf("Please Wait\n");
 
     /* 全クライアントのユーザー名を得る */
@@ -87,10 +76,6 @@ int Client_net::SendRecvManager(void)
     int i;
     int endFlag = 1;
     struct timeval timeout;
-
-    CONTAINER Posdata;
-
-    memset(&Posdata, 0, sizeof(CONTAINER));
 
     /* select()の待ち時間を設定する */
     timeout.tv_sec = 0;
@@ -145,20 +130,6 @@ void Client_net::GetAllName(int *clientID, int *num, char clientNames[][MAX_NAME
     RecvIntData(clientID);
     /* クライアント数の読み込み */
     RecvIntData(num);
-
-    /* 全クライアントのユーザー名を読み込む */
-    for (i = 0; i < (*num); i++)
-    {
-        RecvData(clientNames[i], MAX_NAME_SIZE);
-    }
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("client number = %d\n", (*num));
-    for (i = 0; i < (*num); i++)
-    {
-        printf("%d:%s\n", i, clientNames[i]);
-    }
-#endif
 }
 
 void Client_net::SetMask(void)

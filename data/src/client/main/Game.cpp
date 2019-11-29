@@ -5,12 +5,14 @@ Game::Game()
 {
 }
 
+int Game::clientID;
+
 bool Game::Initialize(int argc, char *argv[])
 {
     char name[MAX_CLIENTS][MAX_NAME_SIZE];
     char localHostName[] = "localhost";
     char *serverName;
-    int clientID;
+
     class Client_command *command;
 
     mNet = new Client_net(this);

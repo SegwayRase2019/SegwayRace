@@ -20,11 +20,10 @@ private:
   class Game *mGame;
   class Client_window *mWindow;
   class Client_net *mClient_net;
-  void SetIntData2DataBlock(void *, int, int *);
-  void SetCharData2DataBlock(void *, char, int *);
   void RecvCircleData(void);
   void RecvRectangleData(void);
   void RecvDiamondData(void);
+  int strage; /*あとで消す*/
 };
 
 class Client_window
