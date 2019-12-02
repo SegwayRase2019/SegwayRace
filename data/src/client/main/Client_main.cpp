@@ -12,7 +12,7 @@ int main(int argc,char *argv[])
     }
 	
 	/* メインループ */
-    while(game -> getEndFlag()){
+    while(game -> GetEndFlag()){
 		game -> RunLoop();
     };
 
