@@ -52,6 +52,7 @@ private:
   Vector2 mPosition;
   float mScale;
   float mRotation;
+  bool mRecomputeTransform;
 
   std::vector<class Component *> mComponents;
   class Game *mGame;

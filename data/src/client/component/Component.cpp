@@ -7,10 +7,15 @@ Component::Component(Actor *owner, int updateOrder)
     mOwner->AddComponent(this);
 }
 
-Component:: ~Component() {
+Component::~Component()
+{
     mOwner->RemoveComponent(this);
 }
 
-    void Component::Update(float deltaTime)
+void Component::Update(float deltaTime)
+{
+}
+
+void Component::OnUpdateWorldTransform()
 {
 }

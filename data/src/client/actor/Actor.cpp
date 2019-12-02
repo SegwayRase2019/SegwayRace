@@ -65,13 +65,13 @@ void Actor::ActorInput(const uint8_t *command)
 
 void Actor::ComputeWorldTransform()
 {
-    if (mRecomputeWorldTransform)
+    if (mRecomputeTransform)
     {
-        mRecomputeWorldTransform = false;
+        mRecomputeTransform = false;
         // Scale, then rotate, then translate
         mWorldTransform = Matrix3::CreateScale(mScale);
         mWorldTransform *= Matrix3::CreateRotation(mRotation);
-        mWorldTransform *= Matrix3::CreateTranslation(Vector3(mPosition.x, mPosition.y, 0.0f));
+        mWorldTransform *= Matrix3::CreateTranslation(Vector2(mPosition.x, mPosition.y));
 
         // Inform components world transform updated
         for (auto comp : mComponents)
