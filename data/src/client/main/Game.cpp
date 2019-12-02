@@ -1,4 +1,5 @@
 #include "Game.h"
+<<<<<<< HEAD
 #include "./Client_window.h"
 #include "../actor/Racer.h"
 #include "../actor/Stage.h"
@@ -6,11 +7,17 @@
 
 Game::Game()
 	: mEndFlag(1), mUpdatingActors(false)
+=======
+
+Game::Game()
+    : mEndFlag(1)
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 {
 }
 
 bool Game::Initialize(int argc, char *argv[])
 {
+<<<<<<< HEAD
 	char name[MAX_CLIENTS][MAX_NAME_SIZE];
 	char localHostName[] = "localhost";
 	char *serverName;
@@ -58,29 +65,91 @@ bool Game::Initialize(int argc, char *argv[])
 	class Stage *stage = new Stage(this);
 
 	return true;
+=======
+    char name[MAX_CLIENTS][MAX_NAME_SIZE];
+    char localHostName[] = "localhost";
+    char *serverName;
+    int clientID;
+    class Client_command *command;
+
+    mNet = new Client_net(this);
+    mWindow = new Client_window(this);
+    mCommand = new Client_command(this);
+
+    /* 引き数チェック */
+    if (argc == 1)
+    {
+        serverName = localHostName;
+    }
+    else if (argc == 2)
+    {
+        serverName = argv[1];
+    }
+    else
+    {
+        fprintf(stderr, "Usage: %s, Cannot find a Server Name.\n", argv[0]);
+        return -1;
+    }
+
+    /* サーバーとの接続 */
+    if (mNet->SetUpClient(serverName, &clientID, &mNum, name) == -1)
+    {
+        fprintf(stderr, "setup failed : SetUpClient\n");
+        return -1;
+    }
+    /* ウインドウの初期化 */
+    if (!mWindow->InitWindows(clientID, mNum, name))
+    {
+        fprintf(stderr, "setup failed : InitWindows\n");
+        return -1;
+    }
+
+    /* ネットワークイベント処理スレッドの作成 */
+    thr = SDL_CreateThread(NetworkEvent, "NetworkThread", &mEndFlag);
+
+    mTicksCount = SDL_GetTicks();
+
+    return true;
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 void Game::RunLoop()
 {
+<<<<<<< HEAD
 	ProcessInput();
 	UpdateGame();
 	GenerateOutput();
+=======
+    ProcessInput();
+    UpdateGame();
+    GenerateOutput();
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 void Game::Shutdown()
 {
+<<<<<<< HEAD
 	/* 終了処理 */
 	SDL_WaitThread(thr, NULL);
 	mWindow->DestroyWindow();
 	mNet->CloseSoc();
 
 	SDL_Quit();
+=======
+    /* 終了処理 */
+    SDL_WaitThread(thr, NULL);
+    mWindow->DestroyWindow();
+    mNet->CloseSoc();
+
+    SDL_Quit();
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 //private
 
 void Game::ProcessInput()
 {
+<<<<<<< HEAD
 	NetworkEvent(&mEndFlag);
 
 	SDL_Event event;
@@ -102,10 +171,22 @@ void Game::ProcessInput()
 		actor->ProcessInput(keyState);
 	}
 	mUpdatingActors = false;
+=======
+    // 試験的な実装
+    mWindow->WindowEvent(mNum);
+
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    //if escape is pressed, also end loop
+    if (state[SDL_SCANCODE_UP])
+    {
+        mCommand->SendPosCommand();
+    }
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 void Game::UpdateGame()
 {
+<<<<<<< HEAD
 	while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
 		;
 
@@ -189,11 +270,25 @@ void Game::AddSprite(SpriteComponent *sprite)
 void Game::RemoveSprite(SpriteComponent *sprite)
 {
 	mWindow->RemoveSprite(sprite);
+=======
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
+        ;
+
+    float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+    if (deltaTime > 0.05f)
+    {
+        deltaTime = 0.05f;
+    }
+    mTicksCount = SDL_GetTicks();
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 void Game::GenerateOutput()
 {
+<<<<<<< HEAD
 	mWindow->Draw();
+=======
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
 
 /*****************************************************************
@@ -204,6 +299,7 @@ void Game::GenerateOutput()
 *****************************************************************/
 int Game::NetworkEvent(void *data)
 {
+<<<<<<< HEAD
 	int *endFlag;
 
 	endFlag = (int *)data;
@@ -211,4 +307,14 @@ int Game::NetworkEvent(void *data)
 	*endFlag = mNet->SendRecvManager();
 	//}
 	return 0;
+=======
+    int *endFlag;
+
+    endFlag = (int *)data;
+    while (*endFlag)
+    {
+        *endFlag = Client_net::SendRecvManager();
+    }
+    return 0;
+>>>>>>> 98288e8... ネットワークのマルチスレッド化
 }
