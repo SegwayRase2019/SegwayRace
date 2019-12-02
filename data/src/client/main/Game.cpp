@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "./Client_window.h"
 #include "../actor/Racer.h"
+#include "../actor/Stage.h"
 #include <algorithm>
 
 Game::Game()
@@ -54,6 +55,7 @@ bool Game::Initialize(int argc, char *argv[])
 	mTicksCount = SDL_GetTicks();
 
 	class Racer *player = new Racer(this);
+	class Stage *stage = new Stage(this);
 
 	return true;
 }

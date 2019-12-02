@@ -9,6 +9,8 @@ class Racer : public Actor
 
     void UpdateActor(float deltaTime) override;
     void ActorInput(const uint8_t *keyState) override;
+    Vector2 GetCenterPosition() { return mPos; }
 
   private:
+    Vector2 mPos;
 };

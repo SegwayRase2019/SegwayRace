@@ -31,6 +31,9 @@ public:
   float GetRotation() const { return mRotation; }
   void SetRotation(float rotation) { mRotation = rotation; }
 
+  void ComputeWorldTransform();
+  const Matrix3 &GetWorldTransform() const { return mWorldTransform; }
+
   Vector2 GetForward() const { return Vector2(-Math::Sin(mRotation), -Math::Cos(mRotation)); }
 
   State GetState() const { return mState; }
@@ -45,6 +48,7 @@ public:
 private:
   State mState;
 
+  Matrix3 mWorldTransform;
   Vector2 mPosition;
   float mScale;
   float mRotation;

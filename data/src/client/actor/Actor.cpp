@@ -24,6 +24,10 @@ void Actor::Update(float deltaTime)
 {
     if (mState == EActive)
     {
+        if (mRecomputeTransform)
+        {
+            ComputeWorldTransform();
+        }
         UpdateComponents(deltaTime);
         UpdateActor(deltaTime);
     }
@@ -41,7 +45,7 @@ void Actor::UpdateActor(float deltaTime)
 {
 }
 
-void Actor::ProcessInput(const uint8_t* command)
+void Actor::ProcessInput(const uint8_t *command)
 {
     if (mState == EActive)
     {
@@ -55,8 +59,26 @@ void Actor::ProcessInput(const uint8_t* command)
     }
 }
 
-void Actor::ActorInput(const uint8_t* command)
+void Actor::ActorInput(const uint8_t *command)
 {
+}
+
+void Actor::ComputeWorldTransform()
+{
+    if (mRecomputeWorldTransform)
+    {
+        mRecomputeWorldTransform = false;
+        // Scale, then rotate, then translate
+        mWorldTransform = Matrix3::CreateScale(mScale);
+        mWorldTransform *= Matrix3::CreateRotation(mRotation);
+        mWorldTransform *= Matrix3::CreateTranslation(Vector3(mPosition.x, mPosition.y, 0.0f));
+
+        // Inform components world transform updated
+        for (auto comp : mComponents)
+        {
+            comp->OnUpdateWorldTransform();
+        }
+    }
 }
 
 void Actor::AddComponent(Component *component)
