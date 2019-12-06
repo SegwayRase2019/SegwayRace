@@ -6,8 +6,6 @@
 #include <algorithm>
 #include <cmath>
 
-int interval = 5;
-
 Game::Game()
 	: mEndFlag(1), mUpdatingActors(false)
 {
@@ -123,7 +121,6 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 	mTicksCount = SDL_GetTicks();
-	interval = deltaTime;
 
 	// Update all actors
 	mUpdatingActors = true;
@@ -141,7 +138,6 @@ void Game::UpdateGame()
 	mPendingActors.clear();
 
 	mCommand->SendPosCommand();
-	SDL_Log("rot.%f \n", mPlayer->GetRotation());
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		Vector2 pos;

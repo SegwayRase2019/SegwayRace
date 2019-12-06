@@ -17,8 +17,6 @@ Player::Player(Game *game, int clientID)
 
 void Player::UpdateActor(float deltaTime)
 {
-	//SetPosition(mGame->mRacer[mGame->clientID]->GetPosition());
-	//SetRotation(mGame->mRacer[mGame->clientID]->GetRotation());
 }
 
 void Player::ActorInput(const uint8_t *keyState)
