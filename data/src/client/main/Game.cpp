@@ -59,11 +59,10 @@ bool Game::Initialize(int argc, char *argv[])
 
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if (i == clientID)
-			mRacer[i] = new Player(this, i);
-		else
-			mRacer[i] = new Racer(this, i);
+		mRacer[i] = new Racer(this, i);
 	}
+	mPlayer = new Player(this, clientID);
+
 	class Stage *stage = new Stage(this);
 
 	return true;
@@ -90,7 +89,6 @@ void Game::Shutdown()
 
 void Game::ProcessInput()
 {
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -142,18 +140,14 @@ void Game::UpdateGame()
 	mCommand->SendPosCommand();
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if (i != clientID)
-		{
-			Vector2 pos;
-			float rot;
-			pos.x = mCommand->PlayerPos[i].x;
-			pos.y = mCommand->PlayerPos[i].y;
-			rot = mCommand->PlayerPos[i].rot;
-			mRacer[i]->SetPosition(pos);
-			mRacer[i]->SetRotation(rot);
-		}
+		Vector2 pos;
+		float rot;
+		pos.x = mCommand->PlayerPos[i].x;
+		pos.y = mCommand->PlayerPos[i].y;
+		rot = mCommand->PlayerPos[i].rot;
+		mRacer[i]->SetPosition(pos);
+		mRacer[i]->SetRotation(rot);
 	}
-	//当たり判定修正
 
 	// Add any dead actors to a temp vector
 	std::vector<Actor *>
