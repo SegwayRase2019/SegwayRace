@@ -75,8 +75,6 @@ void Game::RunLoop()
 	ProcessInput();
 	UpdateGame();
 	GenerateOutput();
-	mPlayer->SetPosition(mRacer[clientID]->GetPosition());
-	mPlayer->SetRotation(mRacer[clientID]->GetRotation());
 }
 
 void Game::Shutdown()
@@ -235,7 +233,6 @@ int Game::NetworkEvent(void *data)
 	while (*networkEndFlag)
 	{
 		*networkEndFlag = Client_net::SendRecvManager();
-		//SDL_Delay(interval);
 	}
 	return 0;
 }
