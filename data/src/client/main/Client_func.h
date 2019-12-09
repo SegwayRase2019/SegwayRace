@@ -15,6 +15,8 @@ public:
   void SendEndCommand(void);
   void SendPosCommand(void);
 
+  static bool isCollision;
+
 private:
   class Game *mGame;
   class Client_window *mWindow;
