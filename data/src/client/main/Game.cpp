@@ -149,6 +149,15 @@ void Game::UpdateGame()
 		mRacer[i]->SetRotation(rot);
 	}
 
+	if(mCommand->isCollision == true){
+		Vector2 pos;
+		pos.x = mCommand->PlayerPos[clientID].x;
+		pos.y = mCommand->PlayerPos[clientID].y;
+		mPlayer->SetPosition(pos);
+		mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
+		mCommand->isCollision = false;
+	}
+
 	// Add any dead actors to a temp vector
 	std::vector<Actor *>
 		deadActors;

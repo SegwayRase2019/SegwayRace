@@ -245,6 +245,8 @@ int Server_net::NetworkEvent(void *data)
             ;
         countTime = SDL_GetTicks();
         *endflag = SendRecvManager();
+        if (running == false)
+            endflag = 0;
     }
     printf("スレッドの終了\n");
     running = false;

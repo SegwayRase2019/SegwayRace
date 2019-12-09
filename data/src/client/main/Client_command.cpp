@@ -5,10 +5,12 @@
 Client_command::Client_command(Game *game)
 {
     mGame = game;
+    isCollision = false;
 }
 
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
+bool Client_command::isCollision;
 
 int Client_command::ExecuteCommand()
 {
@@ -32,6 +34,10 @@ int Client_command::ExecuteCommand()
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;
         PlayerPos[Posdata.Client_id].Client_id = Posdata.Client_id;
+        break;
+
+    case PLAYER_COLLISION:
+        isCollision = true;
         break;
     }
     return endFlag;
