@@ -15,8 +15,8 @@ Racer::Racer(Game *game)
 	mPos.y = 270;
 	SetPosition(mPos);
 
-	// Create an input component and set keys/speed
-	// InputComponent* ic = new InputComponent(this);
+	// //Create an input component and set keys/speed
+	// InputComponent *ic = new InputComponent(this);
 	// ic->SetForwardKey(SDL_SCANCODE_W);
 	// ic->SetBackKey(SDL_SCANCODE_S);
 	// ic->SetClockwiseKey(SDL_SCANCODE_A);

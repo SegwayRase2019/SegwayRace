@@ -20,24 +20,6 @@ void MoveComponent::Update(float deltaTime)
         Vector2 pos = mOwner->GetPosition();
         pos += mOwner->GetForward() * mForwardSpeed * deltaTime;
 
-        // (Screen wrapping code only for asteroids)
-        // if (pos.x < 0.0f)
-        // {
-        //     pos.x = 558.0f;
-        // }
-        // else if (pos.x > 560.0f)
-        // {
-        //     pos.x = 2.0f;
-        // }
-
-        // if (pos.y < 0.0f)
-        // {
-        //     pos.y = 558.0f;
-        // }
-        // else if (pos.y > 558.0f)
-        // {
-        //     pos.y = 2.0f;
-        // }
 
         mOwner->SetPosition(pos);
     }
