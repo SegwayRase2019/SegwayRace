@@ -1,6 +1,7 @@
 #include "Server_common.h"
 #include "Server_func.h"
 #include "Collision.h"
+#include "Server_calculate.h"
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
@@ -23,7 +24,12 @@ int Server_command::ExecuteCommand(int pos)
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
-	Collision::Collision_Judgement(Posdata); //当たり判定
+	if (Posdata.Command != END_COMMAND)
+	{
+		Collision::Collision_Judgement(Posdata); //当たり判定
+
+		Calculate::Stage_rank(Posdata);
+	}
 
 	switch (Posdata.Command)
 	{

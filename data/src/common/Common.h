@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <SDL2/SDL.h>
+#include "./math/Math.h"
 
 #define PORT (u_short)8888 /* ポート番号 */
 
@@ -35,4 +36,5 @@ typedef struct
     float rot = 0;
     int Client_id;
     char Command;
+    int rank;
 } CONTAINER;
