@@ -11,6 +11,8 @@ Client_window::Client_window(Game *game)
 	: mWindow(nullptr), mRenderer(nullptr)
 {
 	mGame = game;
+	mWindowWidth = 560;
+	mWindowHeight = 560;
 }
 
 bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE])
@@ -39,8 +41,8 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 		"SegwayRace", // Window title
 		100,		  // Top left x-coordinate of window
 		100,		  // Top left y-coordinate of window
-		560,		  // Width of window
-		560,		  // Height of window
+		mWindowWidth,		  // Width of window
+		mWindowHeight,		  // Height of window
 		0			  // Flags (0 for no flags Set)
 	);
 	if (!mWindow)
