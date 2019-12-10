@@ -1,152 +1,78 @@
 #include "./Client_func.h"
+#include "../../common/math/Math.h"
+#include "../actor/Player.h"
 
 Client_command::Client_command(Game *game)
 {
     mGame = game;
+    isCollision = false;
 }
 
-int Client_command::ExecuteCommand(char command)
+CONTAINER Posdata;
+CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
+bool Client_command::isCollision;
+
+int Client_command::ExecuteCommand()
 {
-    mClient_net = mGame->GetClient_net();
-    mWindow = mGame->GetClient_window();
 
     int endFlag = 1;
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("ExecuteCommand()\n");
-    printf("command = %c\n", command);
-#endif
-    switch (command)
+
+    memset(&Posdata, 0, sizeof(CONTAINER));
+
+    Client_net::RecvData(&Posdata, sizeof(Posdata));
+
+    switch (Posdata.Command)
     {
     case END_COMMAND:
         endFlag = 0;
+        printf("%c\n", Posdata.Command);
         break;
-    case CIRCLE_COMMAND:
-        RecvCircleData();
+
+    case PLAYER_UP_COMMAND:
+        printf("id=%d,x=%f,y=%f,rot=%f\n", Posdata.Client_id, Posdata.x, Posdata.y, Posdata.rot);
+        PlayerPos[Posdata.Client_id].x = Posdata.x;
+        PlayerPos[Posdata.Client_id].y = Posdata.y;
+        PlayerPos[Posdata.Client_id].rot = Posdata.rot;
+        PlayerPos[Posdata.Client_id].Client_id = Posdata.Client_id;
         break;
-    case RECT_COMMAND:
-        RecvRectangleData();
-        break;
-    case DIAMOND_COMMAND:
-        RecvDiamondData();
+
+    case PLAYER_COLLISION:
+        isCollision = true;
         break;
     }
     return endFlag;
 }
 
-void Client_command::SendRectangleCommand(void)
+void Client_command::SendPosCommand(void)
 {
-    unsigned char data[MAX_DATA];
-    int dataSize;
+    Vector2 pos = mGame->mPlayer->GetPosition();
 
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("SendRectangleCommand()\n");
-#endif
-    dataSize = 0;
-    /* コマンドのセット */
-    SetCharData2DataBlock(data, RECT_COMMAND, &dataSize);
+    memset(&Posdata, 0, sizeof(CONTAINER));
 
-    /* データの送信 */
-    mClient_net->SendData(data, dataSize);
-}
+    //計算するところ
+    Posdata.x = pos.x;
+    Posdata.y = pos.y;
+    Posdata.rot = mGame->mPlayer->GetRotation();
+    Posdata.Command = PLAYER_UP_COMMAND;
+    Posdata.Client_id = Game::clientID;
 
-void Client_command::SendCircleCommand(int pos)
-{
-    unsigned char data[MAX_DATA];
-    int dataSize;
-
-    /* 引き数チェック */
-    assert(0 <= pos && pos < MAX_CLIENTS);
-
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("SendCircleCommand()\n");
-    printf("Send Circle Command to %d\n", pos);
-#endif
-
-    dataSize = 0;
-    /* コマンドのセット */
-    SetCharData2DataBlock(data, CIRCLE_COMMAND, &dataSize);
-    /* クライアント番号のセット */
-    SetIntData2DataBlock(data, pos, &dataSize);
-
-    /* データの送信 */
-    mClient_net->SendData(data, dataSize);
+    /*データの送信*/
+    mClient_net->SendData(&Posdata, sizeof(CONTAINER));
 }
 
 void Client_command::SendEndCommand(void)
 {
-    char data[MAX_DATA];
-    int dataSize;
 
 #ifndef NDEBUG
     printf("#####\n");
     printf("SendEndCommand()\n");
 #endif
 
-    dataSize = 0;
-    /* コマンドのセット */
-    SetCharData2DataBlock(data, END_COMMAND, &dataSize);
+    memset(&Posdata, 0, sizeof(CONTAINER));
+
+    Posdata.Command = END_COMMAND;
+    Posdata.Client_id = Game::clientID;
+
     /* データの送信 */
-    mClient_net->SendData(data, dataSize);
-}
-
-void Client_command::SetIntData2DataBlock(void *data, int intData, int *dataSize)
-{
-    int tmp;
-
-    /* 引き数チェック */
-    assert(data != NULL);
-    assert(0 <= (*dataSize));
-
-    tmp = htonl(intData);
-
-    /* int 型のデータを送信用データの最後にコピーする */
-    memcpy(data + (*dataSize), &tmp, sizeof(int));
-    /* データサイズを増やす */
-    (*dataSize) += sizeof(int);
-}
-
-void Client_command::SetCharData2DataBlock(void *data, char charData, int *dataSize)
-{
-    /* 引き数チェック */
-    assert(data != NULL);
-    assert(0 <= (*dataSize));
-
-    /* char 型のデータを送信用データの最後にコピーする */
-    *(char *)(data + (*dataSize)) = charData;
-    /* データサイズを増やす */
-    (*dataSize) += sizeof(char);
-}
-
-void Client_command::RecvCircleData(void)
-{
-    int x, y, r;
-
-    /* 円コマンドに対する引き数を受信する */
-    mClient_net->RecvIntData(&x);
-    mClient_net->RecvIntData(&y);
-    mClient_net->RecvIntData(&r);
-}
-
-void Client_command::RecvRectangleData(void)
-{
-    int x, y, width, height;
-
-    /* 四角コマンドに対する引き数を受信する */
-    mClient_net->RecvIntData(&x);
-    mClient_net->RecvIntData(&y);
-    mClient_net->RecvIntData(&width);
-    mClient_net->RecvIntData(&height);
-}
-
-void Client_command::RecvDiamondData(void)
-{
-    int x, y, height;
-
-    /* 菱形コマンドに対する引き数を受信する */
-    mClient_net->RecvIntData(&x);
-    mClient_net->RecvIntData(&y);
-    mClient_net->RecvIntData(&height);
+    mClient_net->SendData(&Posdata, sizeof(CONTAINER));
 }

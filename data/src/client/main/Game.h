@@ -8,63 +8,68 @@
 // Game class
 class Game
 {
-  public:
-    Game();
-    // Initialize the game
-    bool Initialize(int, char *[]);
-    // Runs the game loop until the game is over
-    void RunLoop();
-    // Shutdown the game
-    void Shutdown();
+public:
+  Game();
+  // Initialize the game
+  bool Initialize(int, char *[]);
+  // Runs the game loop until the game is over
+  void RunLoop();
+  // Shutdown the game
+  void Shutdown();
 
-    // Create Thread
-    bool CreateTread(SDL_ThreadFunction fc, const char *name);
+  // Create Thread
+  bool CreateTread(SDL_ThreadFunction fc, const char *name);
 
-    void AddActor(class Actor *actor);
-    void RemoveActor(class Actor *actor);
+  void AddActor(class Actor *actor);
+  void RemoveActor(class Actor *actor);
 
-    void AddSprite(class SpriteComponent *sprite);
-    void RemoveSprite(class SpriteComponent *sprite);
+  void AddSprite(class SpriteComponent *sprite);
+  void RemoveSprite(class SpriteComponent *sprite);
 
-    // Getter
-    class Client_net *GetClient_net(void) const { return mNet; }
-    class Client_window *GetClient_window(void) const { return mWindow; }
-    class Client_command *GetClient_command(void) const { return mCommand; }
-    int GetEndFlag(void) { return mEndFlag; }
+  static int clientID;
 
-  private:
-    class Client_net *mNet;
-    class Client_window *mWindow;
-    class Client_command *mCommand;
+  // Getter
+  class Client_net *GetClient_net(void) const { return mNet; }
+  class Client_window *GetClient_window(void) const { return mWindow; }
+  class Client_command *GetClient_command(void) const { return mCommand; }
+  int GetEndFlag(void) { return mEndFlag; }
 
-    // network thread
-    SDL_Thread *thr;
+  class Racer *mRacer[MAX_CLIENTS];
+  class Player *mPlayer;
 
-    // Helper functions for the game loop
-    void ProcessInput();
-    // Update
-    void UpdateGame();
-    //Draw Renderer
-    void GenerateOutput();
+private:
+  class Client_net *mNet;
+  class Client_window *mWindow;
+  class Client_command *mCommand;
 
-    int NetworkEvent(void *data);
+  // network thread
+  SDL_Thread *thr;
 
-    // All the actors in the game
-    std::vector<class Actor *> mActors;
-    // Any pending actors
-    std::vector<class Actor *> mPendingActors;
+  // Helper functions for the game loop
+  void ProcessInput();
+  // Update
+  void UpdateGame();
+  //Draw Renderer
+  void GenerateOutput();
 
-    //*static*/ int NetworkEvent(void *data);
+  static int NetworkEvent(void *data);
 
-    // Number of ticks since start of game
-    Uint32 mTicksCount;
-    // Game should continue to run
-    bool mIsRunning;
-    int mEndFlag;
+  // All the actors in the game
+  std::vector<class Actor *> mActors;
+  // Any pending actors
+  std::vector<class Actor *> mPendingActors;
 
-    // Track if we're updating actors right now
-    bool mUpdatingActors;
+  //*static*/ int NetworkEvent(void *data);
 
-    // 以下は必要ない変数
-    int mNum;
+  // Number of ticks since start of game
+  Uint32 mTicksCount;
+  // Game should continue to run
+  bool mIsRunning;
+  int mEndFlag;
+
+  // Track if we're updating actors right now
+  bool mUpdatingActors;
+
+  // 以下は必要ない変数
+  int mNum;
 };

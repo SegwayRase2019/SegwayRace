@@ -61,10 +61,6 @@ void Actor::ProcessInput(const uint8_t *command)
 
 void Actor::ActorInput(const uint8_t *command)
 {
-}
-
-void Actor::ComputeWorldTransform()
-{
     if (mRecomputeTransform)
     {
         mRecomputeTransform = false;

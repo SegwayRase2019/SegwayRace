@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	net = new Server_net();
 
 	int num;
-	int endFlag = 1;
+	bool endFlag = true;
 
 	/* 引き数チェック */
 	if (argc != 2)
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	/* メインイベントループ */
 	while (endFlag)
 	{
-		endFlag = net->SendRecvManager();
+		endFlag = Server_net::running;
 	};
 
 	/* 終了処理 */

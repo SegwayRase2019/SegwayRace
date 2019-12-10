@@ -424,6 +424,11 @@ class Matrix3
 		return reinterpret_cast<const float *>(&mat[0][0]);
 	}
 
+	Vector2 GetAxis() const
+	{
+		return Vector2::Normalize(Vector2(mat[1][0], mat[1][1]));
+	}
+
 	// Matrix multiplication
 	friend Matrix3 operator*(const Matrix3 &left, const Matrix3 &right)
 	{

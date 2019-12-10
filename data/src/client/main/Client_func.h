@@ -7,21 +7,22 @@
 
 class Client_command
 {
-  public:
-    Client_command(class Game *game);
+public:
+  Client_command(class Game *game);
 
-    int ExecuteCommand(char);
-    void SendRectangleCommand(void);
-    void SendCircleCommand(int pos);
-    void SendEndCommand(void);
+  static int ExecuteCommand();
+  static CONTAINER PlayerPos[MAX_CLIENTS];
+  void SendEndCommand(void);
+  void SendPosCommand(void);
 
-  private:
-    class Game *mGame;
-    class Client_net *mClient_net;
-    class Client_window *mWindow;
-    void SetIntData2DataBlock(void *, int, int *);
-    void SetCharData2DataBlock(void *, char, int *);
-    void RecvCircleData(void);
-    void RecvRectangleData(void);
-    void RecvDiamondData(void);
+  static bool isCollision;
+
+private:
+  class Game *mGame;
+  class Client_window *mWindow;
+  class Client_net *mClient_net;
+  void RecvCircleData(void);
+  void RecvRectangleData(void);
+  void RecvDiamondData(void);
+  int strage; /*あとで消す*/
 };

@@ -11,6 +11,8 @@ Client_window::Client_window(Game *game)
 	: mWindow(nullptr), mRenderer(nullptr)
 {
 	mGame = game;
+	mWindowWidth = 560;
+	mWindowHeight = 560;
 }
 
 bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE])
@@ -39,8 +41,8 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 		"SegwayRace", // Window title
 		100,		  // Top left x-coordinate of window
 		100,		  // Top left y-coordinate of window
-		560,		  // Width of window
-		560,		  // Height of window
+		mWindowWidth,		  // Width of window
+		mWindowHeight,		  // Height of window
 		0			  // Flags (0 for no flags Set)
 	);
 	if (!mWindow)
@@ -67,36 +69,6 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 	SDL_SetRenderDrawColor(mRenderer, 220, 220, 220, 255);
 	SDL_RenderClear(mRenderer);
 
-	/* ボタンの作成 */
-	SDL_Texture *tex = nullptr;
-	for (i = 0; i < num + 2; i++)
-	{
-		gButtonRect[i].x = 20 + 80 * i;
-		gButtonRect[i].y = 10;
-		gButtonRect[i].w = 70;
-		gButtonRect[i].h = 20;
-
-		if (i == num)
-		{
-			s = allButton;
-			tex = GetTexture(allButton);
-		}
-		else if (i == num + 1)
-		{
-			// s = endButton;
-			tex = GetTexture(endButton);
-		}
-		else
-		{
-			// s = clientButton[i];
-			tex = GetTexture(clientButton[i]);
-		}
-		// image = IMG_Load(s);
-		// tex = SDL_CreateTextureFromSurface(mRenderer, image);
-		// SDL_FreeSurface(image);
-
-		SDL_RenderCopy(mRenderer, tex, NULL, &gButtonRect[i]);
-	}
 	SDL_RenderPresent(mRenderer);
 
 	return true;

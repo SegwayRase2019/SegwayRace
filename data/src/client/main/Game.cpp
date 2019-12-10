@@ -1,20 +1,23 @@
 #include "Game.h"
 #include "./Client_window.h"
 #include "../actor/Racer.h"
+#include "../actor/Player.h"
 #include "../actor/Stage.h"
 #include <algorithm>
+#include <cmath>
 
 Game::Game()
 	: mEndFlag(1), mUpdatingActors(false)
 {
 }
 
+int Game::clientID;
+
 bool Game::Initialize(int argc, char *argv[])
 {
 	char name[MAX_CLIENTS][MAX_NAME_SIZE];
 	char localHostName[] = "localhost";
 	char *serverName;
-	int clientID;
 	class Client_command *command;
 
 	mNet = new Client_net(this);
@@ -50,11 +53,16 @@ bool Game::Initialize(int argc, char *argv[])
 	}
 
 	/* ネットワークイベント処理スレッドの作成 */
-	//thr = SDL_CreateThread(Game::NetworkEvent,"NetworkThread" ,&mEndFlag);
+	thr = SDL_CreateThread(Game::NetworkEvent, "NetworkThread", &mEndFlag);
 
 	mTicksCount = SDL_GetTicks();
 
-	class Racer *player = new Racer(this);
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		mRacer[i] = new Racer(this, i);
+	}
+	mPlayer = new Player(this, clientID);
+
 	class Stage *stage = new Stage(this);
 
 	return true;
@@ -81,15 +89,13 @@ void Game::Shutdown()
 
 void Game::ProcessInput()
 {
-	NetworkEvent(&mEndFlag);
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
 		switch (event.type)
 		{
 		case SDL_QUIT:
-			mEndFlag = false;
+			mCommand->SendEndCommand();
 			break;
 		}
 	}
@@ -131,8 +137,30 @@ void Game::UpdateGame()
 	}
 	mPendingActors.clear();
 
+	mCommand->SendPosCommand();
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		Vector2 pos;
+		float rot;
+		pos.x = mCommand->PlayerPos[i].x;
+		pos.y = mCommand->PlayerPos[i].y;
+		rot = mCommand->PlayerPos[i].rot;
+		mRacer[i]->SetPosition(pos);
+		mRacer[i]->SetRotation(rot);
+	}
+
+	if(mCommand->isCollision == true){
+		Vector2 pos;
+		pos.x = mCommand->PlayerPos[clientID].x;
+		pos.y = mCommand->PlayerPos[clientID].y;
+		mPlayer->SetPosition(pos);
+		mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
+		mCommand->isCollision = false;
+	}
+
 	// Add any dead actors to a temp vector
-	std::vector<Actor *> deadActors;
+	std::vector<Actor *>
+		deadActors;
 	for (auto actor : mActors)
 	{
 		if (actor->GetState() == Actor::EDead)
@@ -204,11 +232,12 @@ void Game::GenerateOutput()
 *****************************************************************/
 int Game::NetworkEvent(void *data)
 {
-	int *endFlag;
+	int *networkEndFlag;
 
-	endFlag = (int *)data;
-	//while(*endFlag){
-	*endFlag = mNet->SendRecvManager();
-	//}
+	networkEndFlag = (int *)data;
+	while (*networkEndFlag)
+	{
+		*networkEndFlag = Client_net::SendRecvManager();
+	}
 	return 0;
 }

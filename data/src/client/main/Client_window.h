@@ -22,11 +22,18 @@ public:
 
   SDL_Texture *GetTexture(const std::string &filename);
 
+  // getter
+  int GetWidth() const { return mWindowWidth; }
+  int GetHeight() const { return mWindowHeight; }
+
 private:
   SDL_Window *mWindow;
   SDL_Renderer *mRenderer;
   class Game *mGame;
   class Client_command *mClient_command;
+
+  int mWindowWidth;
+  int mWindowHeight;
 
   // All the sprite components drawn
   std::vector<class SpriteComponent *> mSprites;
