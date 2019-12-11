@@ -21,6 +21,11 @@ int Client_command::ExecuteCommand()
 
     Client_net::RecvData(&Posdata, sizeof(Posdata));
 
+    if (Posdata.Client_id == Game::clientID)
+    {
+        printf("Rank = %d\n", Posdata.rank);
+    }
+
     switch (Posdata.Command)
     {
     case END_COMMAND:

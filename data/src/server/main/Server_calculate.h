@@ -4,12 +4,19 @@
 #include <cmath>
 #include <stdlib.h>
 
-class Restitution
+class Calculate
 {
 public:
-  Restitution();
+  Calculate();
 
-  static int Player_restitution(CONTAINER Posdata);
+  static int Player_restitution(CONTAINER Posdata); //反発係数の計算
+
+  static int Stage_rank(CONTAINER Posdata); //順位の計算
+
+  static int Calculate_angle();
+  static float Player_angle[MAX_CLIENTS];
+  static float Player_angle_copy[MAX_CLIENTS];
 
 private:
+#define SIZE_OF_ANGLE(Player_angle) (sizeof(Player_angle) / sizeof(Player_angle[0]))
 };
