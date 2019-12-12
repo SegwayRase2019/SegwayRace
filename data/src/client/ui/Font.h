@@ -16,7 +16,6 @@ public:
   void Unload();
 
   SDL_Texture *RenderText(const std::string &textKey, const Vector3 &color = Color::White, int pointSize = 30);
-  SDL_Texture *RenderText(const std::string &textKey);
 
 private:
   std::unordered_map<int, TTF_Font *> mFontData;

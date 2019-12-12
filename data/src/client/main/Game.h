@@ -2,6 +2,8 @@
 #include "../../common/Common.h"
 #include "./Client_func.h"
 #include "./Client_net.h"
+#include "../ui/Canvas.h"
+#include "../ui/Font.h"
 #include <SDL2/SDL_ttf.h>
 #include <vector>
 
@@ -25,6 +27,14 @@ public:
 
   void AddSprite(class SpriteComponent *sprite);
   void RemoveSprite(class SpriteComponent *sprite);
+
+  const std::vector<class Canvas *> &GetUIStack() { return mUIStack; }
+  void PushUI(class Canvas *canvas);
+
+  class Font *GetFont(const std::string &fileName);
+
+  void LoadText(const std::string &fileName);
+  const std::string &GetText(const std::string &key);
 
   static int clientID;
 
@@ -51,6 +61,8 @@ private:
   void UpdateGame();
   //Draw Renderer
   void GenerateOutput();
+  void LoadData();
+  void UnloadData();
 
   static int NetworkEvent(void *data);
 
@@ -58,6 +70,11 @@ private:
   std::vector<class Actor *> mActors;
   // Any pending actors
   std::vector<class Actor *> mPendingActors;
+
+  std::vector<class Canvas *> mUIStack;
+  std::unordered_map<std::string, class Font *> mFonts;
+
+  std::unordered_map<std::string, std::string> mText;
 
   //*static*/ int NetworkEvent(void *data);
 
