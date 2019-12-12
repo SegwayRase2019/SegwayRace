@@ -26,6 +26,7 @@ HUD::HUD(Game* game)
                      break;
         }
     }
+    mNoPlayerUI = mGame->GetClient_window()->GetTexture("assets/images/Player_nothing.png");
     mWindowWidth = mGame->GetClient_window()->GetWidth();
     mWindowHeight = mGame->GetClient_window()->GetHeight();
 }
@@ -49,11 +50,18 @@ void HUD::Draw(SDL_Renderer* renderer)
     {
         DrawTexture(renderer, mRankingUI[i], uiPos, 0.5);
         uiPos.x += 50;
-        DrawTexture(renderer, mRacerUI[mRank[i]], uiPos, 0.5);
+        if (mRank[i]>0)
+            DrawTexture(renderer, mRacerUI[mRank[i] - 1], uiPos, 0.5);
+        else
+            DrawTexture(renderer, mNoPlayerUI, uiPos, 0.5);
         uiPos.x += 50;
     }
 }
 
 void HUD::UpdateRanking()
 {
+    for (int i = 0; i < MAX_CLIENTS; i++)
+    {
+        mRank[i] = mGame->GetClient_command()->PlayerPos[i].rank;
+    }
 }
