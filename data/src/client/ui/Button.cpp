@@ -11,10 +11,6 @@ Button::Button(const std::string &name, Font *font,
 
 Button::~Button()
 {
-    if (mNameTex)
-    {
-        //  mNameTex->Unload();
-    }
 }
 
 void Button::SetName(const std::string &name)
@@ -23,10 +19,9 @@ void Button::SetName(const std::string &name)
 
     if (mNameTex)
     {
-        // mNameTex->Unload();
         mNameTex = nullptr;
     }
-    // mNameTex = mFont->RenderText(mName);
+    mNameTex = mFont->RenderText(mName);
 }
 
 bool Button::ContainsPoint(const Vector2 &pt) const

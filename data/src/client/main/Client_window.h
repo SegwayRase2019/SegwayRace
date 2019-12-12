@@ -21,6 +21,7 @@ public:
   void Draw();
 
   SDL_Texture *GetTexture(const std::string &filename);
+  SDL_Texture *CreateFromSurface(SDL_Surface *surf);
 
   // getter
   int GetWidth() const { return mWindowWidth; }
