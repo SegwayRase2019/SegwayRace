@@ -24,6 +24,7 @@ protected:
 
     SDL_Texture* mRankingUI[MAX_CLIENTS];
     SDL_Texture* mRacerUI[MAX_CLIENTS];
+    SDL_Texture *mNoPlayerUI;
 
     int mRank[MAX_CLIENTS] = {3,2,1,0};
 
