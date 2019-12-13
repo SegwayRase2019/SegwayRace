@@ -7,6 +7,9 @@
 
 float Calculate::Player_angle[MAX_CLIENTS];
 float Calculate::Player_angle_copy[MAX_CLIENTS];
+float Calculate::Player_laps[MAX_CLIENTS] = {0, 0, 0, 0};
+bool Calculate::Warnig_mode = false;
+float Calculate::Before_degree[MAX_CLIENTS];
 
 int Calculate::Player_restitution(CONTAINER Posdata)
 {
@@ -38,17 +41,38 @@ int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
     }
 }
 
+//角度を計算する
 int Calculate::Calculate_angle()
 {
     Vector2 Stage_middle; //ステージの中心座標
     Stage_middle.x = 0;
     Stage_middle.y = 0;
+    bool Back_run = false;
 
     for (int i = 0; i < Server_net::gClientNum; i++)
     {
         float radian = std::atan2(Stage_middle.y - Collision::PlayerPos[i].y, Collision::PlayerPos[i].x - Stage_middle.x);
         float degree = radian * 180 / 3.14;
-        Player_angle[i] = degree;
-        Player_angle_copy[i] = degree;
+
+        //１８０度のところで逆走した場合の角度の調整
+
+        if (degree > 175 && Before_degree[i] < -175)
+        {
+            Warnig_mode = true;
+
+            Back_run = true;
+            Player_laps[i]--;
+        }
+
+        //180度のときの処理
+        if (degree < -175 && Before_degree[i] > 175)
+        {
+            Player_laps[i]++;
+        }
+
+        Player_angle[i] = degree + (360 * Player_laps[i]);
+        Player_angle_copy[i] = degree + (360 * Player_laps[i]);
+        Before_degree[i] = degree;
     }
+    printf("degree = %f\n", Player_angle[0]);
 }

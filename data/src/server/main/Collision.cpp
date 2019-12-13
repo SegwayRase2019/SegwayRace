@@ -8,7 +8,7 @@ int Collision::collision_oppnent;
 int Collision::Collision_Judgement(CONTAINER Posdata)
 {
     Player_Collision(Posdata); //プレイヤーの衝突判定をする
-    //Stage_Collision(Posdata);  //ステージの当たり判定を計算する
+    Stage_Collision(Posdata);  //ステージの当たり判定を計算する
 }
 
 int Collision::Player_Collision(CONTAINER Posdata)
@@ -52,10 +52,14 @@ int Collision::Stage_Collision(CONTAINER Posdata)
 {
     //条件:buttomとupperのx座標は同一であること
     Vector2 Stage_buttom;
+    Stage_buttom.x = 0;
+    Stage_buttom.y = 1800;
     Vector2 Stage_upper;
+    Stage_upper.x = 0;
+    Stage_upper.y = -1800;
 
-    float D; //ステージの外側の幅
-    float d; //ステージの内側の幅
+    float D = 1750; //ステージの外側の幅
+    float d = 950;  //ステージの内側の幅
 
     //buttomとupperとプレイヤーの距離計算
     float distance_upper, distance_buttom;
@@ -71,12 +75,12 @@ int Collision::Stage_Collision(CONTAINER Posdata)
     //２つの距離のどちらが近いか計算する
     if (Stage_upper.y >= Posdata.y) //upperのほうが近いとき
     {
-        if (distance_upper <= D || distance_upper >= d)
+        if (distance_upper >= D || distance_upper <= d)
             Server_command::Posdata.Command = PLAYER_COLLISION;
     }
     else if (Stage_buttom.y <= Posdata.y) //buttomのほうが近いとき
     {
-        if (distance_buttom <= D || distance_buttom >= d)
+        if (distance_buttom >= D || distance_buttom <= d)
             Server_command::Posdata.Command = PLAYER_COLLISION;
     }
     else if (Stage_upper.x < Posdata.x) //ステージの右側の当たり判定計算
