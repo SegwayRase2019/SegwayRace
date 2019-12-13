@@ -41,6 +41,7 @@ public:
   // コンポーネントの追加と削除
   void AddComponent(class Component *component);
   void RemoveComponent(class Component *component);
+    class Game *mGame;
 
 private:
   State mState;
@@ -50,5 +51,5 @@ private:
   float mRotation;
 
   std::vector<class Component *> mComponents;
-  class Game *mGame;
+
 };

@@ -65,6 +65,8 @@ bool Game::Initialize(int argc, char *argv[])
 
 	class Stage *stage = new Stage(this);
 
+	stage->SetStatrtPosition();
+
 	return true;
 }
 
@@ -149,7 +151,8 @@ void Game::UpdateGame()
 		mRacer[i]->SetRotation(rot);
 	}
 
-	if(mCommand->isCollision == true){
+	if (mCommand->isCollision == true)
+	{
 		Vector2 pos;
 		pos.x = mCommand->PlayerPos[clientID].x;
 		pos.y = mCommand->PlayerPos[clientID].y;
