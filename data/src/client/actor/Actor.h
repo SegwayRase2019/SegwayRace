@@ -10,6 +10,7 @@ public:
   enum State
   {
     EActive,
+    EInactive,
     EDead
   };
 

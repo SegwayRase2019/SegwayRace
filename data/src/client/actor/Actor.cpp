@@ -22,7 +22,7 @@ Actor::~Actor()
 
 void Actor::Update(float deltaTime)
 {
-    if (mState == EActive)
+    if (mState == EActive || mState == EInactive)
     {
         UpdateComponents(deltaTime);
         UpdateActor(deltaTime);

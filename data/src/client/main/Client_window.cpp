@@ -1,5 +1,7 @@
 #include "./Client_window.h"
+#include "../component/Component.h"
 #include "../component/SpriteComponent.h"
+#include "../actor/Actor.h"
 #include "../ui/Canvas.h"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
@@ -20,12 +22,7 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 {
 	mClient_command = mGame->GetClient_command();
 
-	int i;
-	SDL_Surface *image;
-	char clientButton[4][30] = {"./assets/images/0.jpg", "./assets/images/1.jpg", "./assets/images/2.jpg", "./assets/images/3.jpg"};
-	char endButton[] = "./assets/images/END.jpg";
-	char allButton[] = "./assets/images/ALL.jpg";
-	char *s, title[10];
+	char *s, title[20];
 
 	/* 引き数チェック */
 	assert(0 < num && num <= MAX_CLIENTS);
@@ -37,9 +34,10 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 		return false;
 	}
 
+	sprintf(title, "SegwayRace(ID:%d)", clientID);
 	/* メインのウインドウを作成する */
 	mWindow = SDL_CreateWindow(
-		"SegwayRace", // Window title
+		title, // Window title
 		100,		  // Top left x-coordinate of window
 		100,		  // Top left y-coordinate of window
 		mWindowWidth,		  // Width of window
@@ -174,7 +172,8 @@ void Client_window::Draw()
 	// Draw all sprite components
 	for (auto sprite : mSprites)
 	{
-		sprite->Draw(mRenderer);
+		if(sprite->Component::GetOwner()->GetState()==Actor::EActive)
+			sprite->Draw(mRenderer);
 	}
 
 	//UIの描画
