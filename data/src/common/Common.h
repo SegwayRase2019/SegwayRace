@@ -29,6 +29,7 @@
 
 #define PLAYER_UP_COMMAND 'U' /*お試し-座標を上に上げる*/
 #define PLAYER_COLLISION 'P'  /*プレイヤーが衝突した判定*/
+
 typedef struct
 {
     float x = 0;

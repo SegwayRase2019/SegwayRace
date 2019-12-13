@@ -16,6 +16,10 @@ public:
   static int Calculate_angle();
   static float Player_angle[MAX_CLIENTS];
   static float Player_angle_copy[MAX_CLIENTS];
+  static float Player_laps[MAX_CLIENTS];
+
+  static bool Warnig_mode;
+  static float Before_degree[MAX_CLIENTS];
 
 private:
 #define SIZE_OF_ANGLE(Player_angle) (sizeof(Player_angle) / sizeof(Player_angle[0]))
