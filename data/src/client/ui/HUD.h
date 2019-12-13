@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../common/Common.h"
+#include "../component/ItemComponent.h"
 #include "./Canvas.h"
 #include <vector>
 
@@ -17,7 +18,10 @@ public:
     void AddRacer(class Racer* rc);
     void RemoveRacer(class Racer* rc);
 
-protected:
+    void AddItemComponent(class ItemComponent *item);
+    void RemoveItemComponent(class ItemComponent *item);
+
+  protected:
     void UpdateRanking();
     int mWindowWidth;
     int mWindowHeight;
@@ -25,6 +29,8 @@ protected:
     SDL_Texture* mRankingUI[MAX_CLIENTS];
     SDL_Texture* mRacerUI[MAX_CLIENTS];
     SDL_Texture *mNoPlayerUI;
+
+    std::vector<class ItemComponent *> mItems;
 
     int mRank[MAX_CLIENTS] = {3,2,1,0};
 

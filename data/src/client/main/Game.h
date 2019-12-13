@@ -42,6 +42,7 @@ public:
   class Client_net *GetClient_net(void) const { return mNet; }
   class Client_window *GetClient_window(void) const { return mWindow; }
   class Client_command *GetClient_command(void) const { return mCommand; }
+  class HUD *GetHUD(void) const { return mHUD; }
   int GetEndFlag(void) { return mEndFlag; }
 
   class Racer *mRacer[MAX_CLIENTS];
@@ -51,6 +52,7 @@ private:
   class Client_net *mNet;
   class Client_window *mWindow;
   class Client_command *mCommand;
+  class HUD *mHUD;
 
   // network thread
   SDL_Thread *thr;

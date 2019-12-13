@@ -58,6 +58,17 @@ void HUD::Draw(SDL_Renderer* renderer)
     }
 }
 
+void HUD::AddItemComponent(ItemComponent* item)
+{
+    mItems.emplace_back(item);
+}
+
+void HUD::RemoveItemComponent(ItemComponent* item)
+{
+    auto iter = std::find(mItems.begin(), mItems.end(), item);
+    mItems.erase(iter);
+}
+
 void HUD::UpdateRanking()
 {
     for (int i = 0; i < MAX_CLIENTS; i++)

@@ -5,6 +5,7 @@
 #include "../actor/Stage.h"
 #include "../ui/Button.h"
 #include "../ui/HUD.h"
+#include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
 #include <SDL2/SDL.h>
 #include <algorithm>
@@ -79,7 +80,11 @@ bool Game::Initialize(int argc, char *argv[])
 
 	class Stage *stage = new Stage(this);
 
+
+	mHUD = new HUD(this);
+
 	stage->SetStatrtPosition();
+
 
 
 	return true;
