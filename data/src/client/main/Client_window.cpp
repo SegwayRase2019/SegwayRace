@@ -1,5 +1,6 @@
 #include "./Client_window.h"
 #include "../component/SpriteComponent.h"
+#include "../ui/Canvas.h"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -121,6 +122,27 @@ SDL_Texture *Client_window::GetTexture(const std::string &filename)
 	return tex;
 }
 
+/*SurfaceからTextureを作成する関数*/
+/*　　　　文字の描画に使用　　　　*/
+SDL_Texture *Client_window::CreateFromSurface(SDL_Surface *surf)
+{
+	SDL_Texture *tex = nullptr;
+	if (!surf)
+	{
+		SDL_Log("Failed to load surfacse for fonts");
+		return nullptr;
+	}
+
+	tex = SDL_CreateTextureFromSurface(mRenderer, surf);
+	SDL_FreeSurface(surf);
+	if (!tex)
+	{
+		SDL_Log("Failed to convert surface to texture for font");
+		return nullptr;
+	}
+	return tex;
+}
+
 void Client_window::AddSprite(SpriteComponent *sprite)
 {
 	int myDrawOrder = sprite->GetDrawOrder();
@@ -153,6 +175,12 @@ void Client_window::Draw()
 	for (auto sprite : mSprites)
 	{
 		sprite->Draw(mRenderer);
+	}
+
+	//UIの描画
+	for (auto ui : mGame->GetUIStack())
+	{
+		ui->Draw(mRenderer);
 	}
 
 	SDL_RenderPresent(mRenderer);

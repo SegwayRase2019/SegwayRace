@@ -2,6 +2,9 @@
 #include "../main/Client_window.h"
 #include <SDL2/SDL.h>
 #include <vector>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 Font::Font(class Game *game)
     : mGame(game)
@@ -63,45 +66,12 @@ SDL_Texture *Font::RenderText(const std::string &textKey,
     if (iter != mFontData.end())
     {
         TTF_Font *font = iter->second;
-        const std::string &actualText = textKey;//mGame->GetText(textKey);
+        const std::string &actualText = textKey;
+        mGame->GetText(textKey);
         SDL_Surface *surf = TTF_RenderUTF8_Blended(font, actualText.c_str(), sdlColor);
         if (surf != nullptr)
         {
-            //texture = mGame->GetClient_window()->CreateFromSurface(surf);
-            SDL_FreeSurface(surf);
-        }
-    }
-    else
-    {
-        SDL_Log("Point size %d is unsupported", pointSize);
-    }
-
-    return texture;
-}
-
-SDL_Texture *Font::RenderText(const std::string &textKey)
-{
-    Vector3 color = Color::White;
-    int pointSize = 24;
-
-    SDL_Texture *texture;
-
-    // Convert to SDL_Color
-    SDL_Color sdlColor;
-    sdlColor.r = static_cast<Uint8>(color.x * 255);
-    sdlColor.g = static_cast<Uint8>(color.y * 255);
-    sdlColor.b = static_cast<Uint8>(color.z * 255);
-    sdlColor.a = 255;
-
-    auto iter = mFontData.find(pointSize);
-    if (iter != mFontData.end())
-    {
-        TTF_Font *font = iter->second;
-        const std::string &actualText = textKey;//mGame->GetText(textKey);
-        SDL_Surface *surf = TTF_RenderUTF8_Blended(font, actualText.c_str(), sdlColor);
-        if (surf != nullptr)
-        {
-            //texture = mGame->GetClient_window()->CreateFromSurface(surf);
+            texture = mGame->GetClient_window()->CreateFromSurface(surf);
             SDL_FreeSurface(surf);
         }
     }

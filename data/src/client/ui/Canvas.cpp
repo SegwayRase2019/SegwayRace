@@ -2,12 +2,15 @@
 #include "../main/Game.h"
 #include "../main/Client_window.h"
 #include "./Font.h"
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 Canvas::Canvas(class Game *game)
     : mGame(game), mTitle(nullptr), mBackGround(nullptr), mTitlePos(200.0f, 10.0f), mNextButtonPos(300.0f, 400.0f), mBGPos(0.0f, 0.0f), mState(EActive)
 {
-    //mGame->PushUI(this);
-    //mFont = mGame->GetFont("assets/fonts/Default.ttf");
+    mGame->PushUI(this);
+    mFont = mGame->GetFont("assets/fonts/Default.ttf");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonYellow.png");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonBlue.png");
 }
@@ -62,8 +65,8 @@ void Canvas::ProcessInput(const uint8_t *keys)
         SDL_GetMouseState(&x, &y);
         // Convert to (0,0) center coordinates
         Vector2 mousePos(static_cast<float>(x), static_cast<float>(y));
-        //mousePos.x -= mGame->GetClient_window()->GetScreenWidth() * 0.5f;
-        //mousePos.y = mGame->GetClient_window()->GetScreenHeight() * 0.5f - mousePos.y;
+        mousePos.x -= mGame->GetClient_window()->GetWidth() * 0.5f;
+        mousePos.y = mGame->GetClient_window()->GetHeight() * 0.5f - mousePos.y;
 
         // Highlight any buttons
         for (auto b : mButtons)
@@ -140,8 +143,8 @@ void Canvas::DrawTexture(SDL_Renderer *renderer, SDL_Texture *texture,
     SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
     SDL_Rect r;
-    r.w = w;
-    r.h = h;
+    r.w = static_cast<int>(w*scale);
+    r.h = static_cast<int>(h*scale);
 
     r.x = static_cast<int>(offset.x);
     r.y = static_cast<int>(offset.y);
