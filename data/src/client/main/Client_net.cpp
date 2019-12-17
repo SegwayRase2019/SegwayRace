@@ -1,7 +1,7 @@
-#include"./Client_func.h"
-#include"./Client_net.h"
-#include<sys/socket.h>
-#include<netdb.h>
+#include "./Client_func.h"
+#include "./Client_net.h"
+#include <sys/socket.h>
+#include <netdb.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
