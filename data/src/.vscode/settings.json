@@ -43,10 +43,5 @@
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
-<<<<<<< HEAD
-    "C_Cpp.errorSquiggles": "Disabled",
-    "git.ignoreLimitWarning": true
-=======
     "C_Cpp.errorSquiggles": "Disabled"
->>>>>>> 07dbe4ff926fe6fcd3b56a669dba917cb1fa4666
 }

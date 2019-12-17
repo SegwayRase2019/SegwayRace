@@ -3,6 +3,7 @@
 #include <vector>
 #include "../../common/math/Math.h"
 #include <cstdint>
+#include "../main/Client_window.h"
 
 class Actor
 {
@@ -31,6 +32,9 @@ public:
   float GetRotation() const { return mRotation; }
   void SetRotation(float rotation) { mRotation = rotation; }
 
+  void ComputeWorldTransform();
+  const Matrix3 &GetWorldTransform() const { return mWorldTransform; }
+
   Vector2 GetForward() const { return Vector2(-Math::Sin(mRotation), -Math::Cos(mRotation)); }
 
   State GetState() const { return mState; }
@@ -42,10 +46,11 @@ public:
   void AddComponent(class Component *component);
   void RemoveComponent(class Component *component);
 
-private:
+protected:
   State mState;
 
-  Matrix3 mWorldTransform;
+private:
+    Matrix3 mWorldTransform;
   Vector2 mPosition;
   float mScale;
   float mRotation;

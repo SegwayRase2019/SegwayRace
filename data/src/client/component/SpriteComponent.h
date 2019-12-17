@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./Component.h"
+#include "../../common/math/Math.h"
 #include <SDL2/SDL.h>
 
 class SpriteComponent : public Component
@@ -15,10 +16,15 @@ public:
   int GetDrawOrder() const { return mDrawOrder; }
   int GetTexHeight() const { return mTexHeight; }
   int GetTexWidth() const { return mTexWidth; }
+  Vector2 PosDelta();
+  float RotDelta();
 
 protected:
   SDL_Texture *mTexture;
   int mDrawOrder;
   int mTexWidth;
   int mTexHeight;
+
+private:
+  Vector2 winCenter;
 };
