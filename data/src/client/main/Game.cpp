@@ -80,12 +80,11 @@ bool Game::Initialize(int argc, char *argv[])
 
 	class Stage *stage = new Stage(this);
 
+	class ItemBox *item = new ItemBox(this);
 
 	mHUD = new HUD(this);
 
 	stage->SetStatrtPosition();
-
-
 
 	return true;
 }
@@ -109,22 +108,22 @@ void Game::Shutdown()
 }
 
 /*新しいUIを動的配列に追加する関数*/
-void Game::PushUI(Canvas* canvas)
+void Game::PushUI(Canvas *canvas)
 {
 	mUIStack.emplace_back(canvas);
 }
 
-Font* Game::GetFont(const std::string& fileName)
+Font *Game::GetFont(const std::string &fileName)
 {
 	auto iter = mFonts.find(fileName);
-	if(iter != mFonts.end())
+	if (iter != mFonts.end())
 	{
 		return iter->second;
 	}
 	else
 	{
 		Font *font = new Font(this);
-		if(font->Load(fileName))
+		if (font->Load(fileName))
 		{
 			mFonts.emplace(fileName, font);
 		}
@@ -138,7 +137,7 @@ Font* Game::GetFont(const std::string& fileName)
 	}
 }
 
-void Game::LoadText(const std::string& fileName)
+void Game::LoadText(const std::string &fileName)
 {
 	// Clear the existing map, if already loaded
 	mText.clear();

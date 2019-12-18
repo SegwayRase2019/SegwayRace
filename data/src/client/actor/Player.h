@@ -22,6 +22,13 @@ public:
   void ComputeRocalTransform();
   const Matrix3 &GetRocalTransform() const { return mRocalTransform; }
 
+  struct status{
+    float weight;
+    float addforce;
+    bool inversion = false;
+
+  }Status;
+
 private:
   Matrix3 mRocalTransform;
   bool mRecomputeTransform;
