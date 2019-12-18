@@ -30,7 +30,7 @@ CPPFLAGS2 ?= $(INC_FLAGS2) -MMD -MP
 ########################################################################################
 all: $(BUILD_DIR)/$(TARGET1) $(BUILD_DIR)/$(TARGET2)
 
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -Wl,-rpath,/usr/local/lib
+LDFLAGS = -lSDL2 -lSDL2_image -lcwiid -lbluetooth -lSDL2_mixer -lSDL2_ttf -Wl,-rpath,/usr/local/lib
 
 $(BUILD_DIR)/$(TARGET1): $(OBJS1)
 	$(CXX) $(OBJS1) -o $@ $(LDFLAGS)
