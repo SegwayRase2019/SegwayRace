@@ -23,18 +23,18 @@ int Client_command::ExecuteCommand()
 
     if (Posdata.Client_id == Game::clientID)
     {
-        printf("Rank = %d\n", Posdata.rank);
+        //printf("Rank = %d\n", Posdata.rank);
     }
 
     switch (Posdata.Command)
     {
     case END_COMMAND:
         endFlag = 0;
-        printf("%c\n", Posdata.Command);
+        //printf("%c\n", Posdata.Command);
         break;
 
     case PLAYER_UP_COMMAND:
-        printf("id=%d,x=%f,y=%f,rot=%f\n", Posdata.Client_id, Posdata.x, Posdata.y, Posdata.rot);
+        //printf("id=%d,x=%f,y=%f,rot=%f\n", Posdata.Client_id, Posdata.x, Posdata.y, Posdata.rot);
         PlayerPos[Posdata.Client_id].x = Posdata.x;
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;

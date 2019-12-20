@@ -14,8 +14,8 @@ Client_window::Client_window(Game *game)
 	: mWindow(nullptr), mRenderer(nullptr)
 {
 	mGame = game;
-	mWindowWidth = 560;
-	mWindowHeight = 560;
+	mWindowWidth = 1000;
+	mWindowHeight = 1000;
 }
 
 bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE])

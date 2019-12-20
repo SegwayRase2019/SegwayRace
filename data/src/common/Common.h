@@ -39,3 +39,14 @@ typedef struct
     char Command;
     int rank;
 } CONTAINER;
+
+typedef struct
+{
+    float wlt;
+    float wrt;
+    float wlb;
+    float wrb;
+    float bal_x;
+    float bal_y;
+    float weight;
+} Prs;
