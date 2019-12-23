@@ -99,7 +99,7 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		fputs("Unable to connect\n", stderr);
 		wiifit_connect = false;
-		return EXIT_FAILURE;
+		return true;
 	}
 	fputs("Wiifit_connected\n", stdout);
 
