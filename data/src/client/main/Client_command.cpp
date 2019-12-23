@@ -1,6 +1,7 @@
 #include "./Client_func.h"
 #include "../../common/math/Math.h"
 #include "../actor/Player.h"
+#include "../ui/HUD.h"
 
 Client_command::Client_command(Game *game)
 {
@@ -39,11 +40,14 @@ int Client_command::ExecuteCommand()
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;
         PlayerPos[Posdata.Client_id].Client_id = Posdata.Client_id;
-        PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
 
     case PLAYER_COLLISION:
         isCollision = true;
+        break;
+
+    case PLAYER_RANKING:
+        PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
     }
     return endFlag;
