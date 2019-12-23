@@ -6,6 +6,7 @@
 #include "../ui/Font.h"
 #include <SDL2/SDL_ttf.h>
 #include <vector>
+#include "../Wiifit/WiiFit_common.h"
 
 // Game class
 class Game
@@ -48,6 +49,15 @@ public:
   class Racer *mRacer[MAX_CLIENTS];
   class Player *mPlayer;
 
+  //wiifitを定義
+  static int Wiifit_Thread(void *data);
+  static Prs prs;
+
+  struct balance_cal balance_cal;
+  static char command; //転送するコマンド
+  bool wiifit_connect = true;
+
+
 private:
   class Client_net *mNet;
   class Client_window *mWindow;
@@ -56,6 +66,9 @@ private:
 
   // network thread
   SDL_Thread *thr;
+  //wiifit thread
+  SDL_Thread *wii_fit_thr;
+
 
   // Helper functions for the game loop
   void ProcessInput();
@@ -67,6 +80,9 @@ private:
   void UnloadData();
 
   static int NetworkEvent(void *data);
+
+  static void cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count,
+                             union cwiid_mesg mesg[], struct timespec *ts);
 
   // All the actors in the game
   std::vector<class Actor *> mActors;
@@ -85,6 +101,7 @@ private:
   // Game should continue to run
   bool mIsRunning;
   int mEndFlag;
+  int mWiiFlag;
 
   // Track if we're updating actors right now
   bool mUpdatingActors;
