@@ -1,6 +1,7 @@
 #include "./Client_func.h"
 #include "../../common/math/Math.h"
 #include "../actor/Player.h"
+#include "../component/MoveComponent.h"
 #include "../ui/HUD.h"
 
 Client_command::Client_command(Game *game)
@@ -11,7 +12,14 @@ Client_command::Client_command(Game *game)
 
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
+CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
+CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
+Vector2 Client_command::CollisionVector[MAX_CLIENTS];
 bool Client_command::isCollision;
+bool Client_command::isRepulsion = false;
+float Client_command::Back_speed = 0.0f;
+int Client_command::Collisioned_oppnent = -1;
+bool Client_command::Oppnent = false;
 
 int Client_command::ExecuteCommand()
 {
@@ -24,7 +32,8 @@ int Client_command::ExecuteCommand()
 
     if (Posdata.Client_id == Game::clientID)
     {
-        //printf("Rank = %d\n", Posdata.rank);
+        // printf("Rank = %d\n", Posdata.rank);
+
     }
 
     switch (Posdata.Command)
@@ -40,16 +49,34 @@ int Client_command::ExecuteCommand()
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;
         PlayerPos[Posdata.Client_id].Client_id = Posdata.Client_id;
+        PlayerPos[Posdata.Client_id].rank = Posdata.rank;
+        PlayerPosCopy[Posdata.Client_id].x = Posdata.x;
+        PlayerPosCopy[Posdata.Client_id].y = Posdata.y;
+
         break;
 
     case PLAYER_COLLISION:
         isCollision = true;
+        Back_speed = std::abs(Posdata.speed);
+        printf("backspeed=%lf\n", Back_speed);
+
+        CollisionPos[Posdata.Client_id].x = Posdata.x;
+        CollisionPos[Posdata.Client_id].y = Posdata.y;
+
+        break;
+
+    case COLLISIONED:
+        Collisioned_oppnent = Posdata.Client_id;
+        CollisionVector[Game::clientID].x = Posdata.x;
+        CollisionVector[Game::clientID].y = Posdata.y;
+        printf("x=%lf,y=%lf\n", CollisionVector[Game::clientID].x, CollisionVector[Game::clientID].y);
         break;
 
     case PLAYER_RANKING:
         PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
     }
+
     return endFlag;
 }
 
@@ -65,6 +92,7 @@ void Client_command::SendPosCommand(void)
     Posdata.rot = mGame->mPlayer->GetRotation();
     Posdata.Command = PLAYER_UP_COMMAND;
     Posdata.Client_id = Game::clientID;
+    Posdata.speed = MoveComponent::mForwardSpeed;
 
     /*データの送信*/
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));

@@ -14,11 +14,14 @@
 #include <sstream>
 
 Game::Game()
-	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false)
+	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0)
+
 {
 }
 
 int Game::clientID;
+CONTAINER Game::Player_difference[MAX_CLIENTS];
+CONTAINER Game::Collision_difference[MAX_CLIENTS];
 
 Prs Game::prs;
 
@@ -125,6 +128,7 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		wii_fit_thr = SDL_CreateThread(Game::Wiifit_Thread, "Wiifit_Thread", &mWiiFlag);
 	}
+
 
 	return true;
 }
@@ -281,25 +285,78 @@ void Game::UpdateGame()
 	mPendingActors.clear();
 
 	mCommand->SendPosCommand();
+
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
 		Vector2 pos;
 		float rot;
 		pos.x = mCommand->PlayerPos[i].x;
 		pos.y = mCommand->PlayerPos[i].y;
+
 		rot = mCommand->PlayerPos[i].rot;
 		mRacer[i]->SetPosition(pos);
 		mRacer[i]->SetRotation(rot);
 	}
 
+	if (Client_command::isRepulsion == true)
+	{
+		Vector2 pos;
+
+		if (Client_command::Collisioned_oppnent == -1)
+		{
+			mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Player_difference[clientID].x * deltaTime * 0.5f;
+			mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Player_difference[clientID].y * deltaTime * 0.5f;
+		}
+		else
+		{
+			mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
+			mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
+		}
+
+		pos.x = mCommand->PlayerPos[clientID].x;
+		pos.y = mCommand->PlayerPos[clientID].y;
+		mPlayer->SetPosition(pos);
+
+		mCountTimer += deltaTime;
+		if (mCountTimer > mIntervalTime)
+		{
+			Client_command::isRepulsion = false;
+			Client_command::Collisioned_oppnent = -1;
+			mCountTimer = 0;
+			printf("下がる\n");
+			if (Client_command::isCollision == true)
+			{
+				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
+				mCommand->PlayerPos[clientID].y = Client_command::PlayerPosCopy[clientID].y;
+				pos.x = mCommand->PlayerPos[clientID].x;
+				pos.y = mCommand->PlayerPos[clientID].y;
+				mPlayer->SetPosition(pos);
+				mRacer[clientID]->SetPosition(pos);
+			}
+		}
+	}
+
 	if (mCommand->isCollision == true)
 	{
 		Vector2 pos;
+		if (Client_command::Collisioned_oppnent == -1)
+		{
+			Player_difference[clientID].x = mCommand->CollisionPos[clientID].x - mCommand->PlayerPos[clientID].x;
+			Player_difference[clientID].y = mCommand->CollisionPos[clientID].y - mCommand->PlayerPos[clientID].y;
+		}
+		else
+		{
+			Collision_difference[clientID].x = mCommand->CollisionVector[clientID].x;
+			Collision_difference[clientID].y = mCommand->CollisionVector[clientID].y;
+		}
+
 		pos.x = mCommand->PlayerPos[clientID].x;
 		pos.y = mCommand->PlayerPos[clientID].y;
 		mPlayer->SetPosition(pos);
 		mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
+
 		mCommand->isCollision = false;
+		Client_command::isRepulsion = true;
 	}
 
 	// Add any dead actors to a temp vector

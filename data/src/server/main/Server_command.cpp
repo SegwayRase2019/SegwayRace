@@ -24,7 +24,7 @@ int Server_command::ExecuteCommand(int pos)
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
-	if (Posdata.Command != END_COMMAND)
+	if (Posdata.Command != END_COMMAND )
 	{
 		Collision::Collision_Judgement(Posdata); //当たり判定
 

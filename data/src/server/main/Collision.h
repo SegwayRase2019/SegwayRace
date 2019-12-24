@@ -2,6 +2,7 @@
 #include "Server_func.h"
 #include <cmath>
 #include <stdlib.h>
+#include "./Server_calculate.h"
 
 class Collision
 {
@@ -17,8 +18,12 @@ public:
   static float distance;
 
   static int collision_oppnent;
+  static Vector2 Collision_Vector[MAX_CLIENTS];
 
   static CONTAINER PlayerPos[MAX_CLIENTS];
+  static int Player_Collision_Strage[MAX_CLIENTS];
+  static float Player_Speed[MAX_CLIENTS];
+  static int Collisioned_opponent[MAX_CLIENTS];
 
 private:
 };

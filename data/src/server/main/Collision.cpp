@@ -4,11 +4,31 @@ bool Collision::collision;
 CONTAINER Collision::PlayerPos[MAX_CLIENTS];
 float Collision::distance;
 int Collision::collision_oppnent;
+int Collision::Player_Collision_Strage[MAX_CLIENTS];
+float Collision::Player_Speed[MAX_CLIENTS];
+int Collision::Collisioned_opponent[MAX_CLIENTS];
+Vector2 Collision::Collision_Vector[MAX_CLIENTS];
 
 int Collision::Collision_Judgement(CONTAINER Posdata)
 {
     Player_Collision(Posdata); //プレイヤーの衝突判定をする
     Stage_Collision(Posdata);  //ステージの当たり判定を計算する
+
+    //衝突判定があったどうかを確認する
+    if (Player_Collision_Strage[Posdata.Client_id] == 1)
+    {
+
+        int Client_id = Server_command::Posdata.Client_id;
+        Posdata.Command = COLLISIONED;
+        Posdata.Client_id = Collisioned_opponent[Client_id];
+        Posdata.x = Collision_Vector[Client_id].x;
+        Posdata.y = Collision_Vector[Client_id].y;
+        Server_net::SendData(Client_id, &Posdata, sizeof(CONTAINER));
+        Posdata.Client_id = Client_id;
+        Server_command::Posdata.Command = PLAYER_COLLISION;
+        Server_command::Posdata.speed = Calculate::SpeedStorage[Server_command::Posdata.Client_id];
+        Player_Collision_Strage[Posdata.Client_id] = 0;
+    }
 }
 
 int Collision::Player_Collision(CONTAINER Posdata)
@@ -39,13 +59,20 @@ int Collision::Player_Collision(CONTAINER Posdata)
         //１フレーム前のコピーを取る
         PlayerPos[Posdata.Client_id].x = Posdata.x;
         PlayerPos[Posdata.Client_id].y = Posdata.y;
+        PlayerPos[Posdata.Client_id].speed = Posdata.speed;
     }
 
     if (collision == true)
     {
         printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
         Server_command::Posdata.Command = PLAYER_COLLISION;
+        Calculate::v2 = PlayerPos[collision_oppnent].speed;
+        Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
+        Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
+        Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
+        Calculate::Player_restitution(Posdata);
     }
+    collision = false;
 }
 
 int Collision::Stage_Collision(CONTAINER Posdata)
@@ -76,21 +103,39 @@ int Collision::Stage_Collision(CONTAINER Posdata)
     if (Stage_upper.y >= Posdata.y) //upperのほうが近いとき
     {
         if (distance_upper >= D || distance_upper <= d)
+        {
             Server_command::Posdata.Command = PLAYER_COLLISION;
+            collision = true;
+        }
     }
     else if (Stage_buttom.y <= Posdata.y) //buttomのほうが近いとき
     {
         if (distance_buttom >= D || distance_buttom <= d)
+        {
             Server_command::Posdata.Command = PLAYER_COLLISION;
+            collision = true;
+        }
     }
     else if (Stage_upper.x < Posdata.x) //ステージの右側の当たり判定計算
     {
         if (Stage_upper.x + D < Posdata.x || Stage_upper.x + d > Posdata.x)
+        {
             Server_command::Posdata.Command = PLAYER_COLLISION;
+            collision = true;
+        }
     }
     else if (Stage_upper.x > Posdata.x) //ステージの左側の当たり判定計算
     {
         if (Stage_upper.x - D > Posdata.x || Stage_upper.x - d < Posdata.x)
+        {
             Server_command::Posdata.Command = PLAYER_COLLISION;
+            collision = true;
+        }
+    }
+    if (collision == true)
+    {
+        Calculate::v2 = 0;
+        collision_oppnent = -1;
+        Calculate::Player_restitution(Posdata);
     }
 }
