@@ -61,6 +61,16 @@ int Server_command::ExecuteCommand(int pos)
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
+	case START_SIGNAL:
+	{
+		dataSize = 0;
+		printf("command=%c\n", Posdata.Command);
+
+		/* 全ユーザーに送る */
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+
+		break;
+	}
 	default:
 		/* 未知のコマンドが送られてきた */
 		//fprintf(stderr, "0x%02x is not command!\n", Posdata.Command);

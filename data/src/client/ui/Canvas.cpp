@@ -13,6 +13,9 @@ Canvas::Canvas(class Game *game)
     mFont = mGame->GetFont("assets/fonts/Default.ttf");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonYellow.png");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonBlue.png");
+
+    mWindowWidth = mGame->GetClient_window()->GetWidth();
+    mWindowHeight = mGame->GetClient_window()->GetHeight();
 }
 
 Canvas::~Canvas()

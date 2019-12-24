@@ -50,5 +50,8 @@ protected:
 
   UIState mState;
 
+  int mWindowWidth;
+  int mWindowHeight;
+
   std::vector<Button *> mButtons;
 };

@@ -4,23 +4,25 @@
 #include "../component/MoveComponent.h"
 #include "../ui/HUD.h"
 
-Client_command::Client_command(Game *game)
-{
-    mGame = game;
-    isCollision = false;
-}
-
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
+bool Client_command::isCollision;
+bool Client_command::isStart;
 CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
 CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
 Vector2 Client_command::CollisionVector[MAX_CLIENTS];
-bool Client_command::isCollision;
 bool Client_command::isRepulsion = false;
 float Client_command::Back_speed = 0.0f;
 int Client_command::Collisioned_oppnent = -1;
 float Client_command::Player_weight[MAX_CLIENTS];
 bool Client_command::Oppnent = false;
+
+Client_command::Client_command(Game *game)
+    : mGame(game)
+{
+    isCollision = false;
+    isStart = false;
+}
 
 int Client_command::ExecuteCommand()
 {
@@ -75,6 +77,11 @@ int Client_command::ExecuteCommand()
     case PLAYER_RANKING:
         PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
+
+    case START_SIGNAL:
+        if(isStart == false)
+            isStart = true;
+        break;
     }
 
     return endFlag;
@@ -111,6 +118,15 @@ void Client_command::SendEndCommand(void)
 
     Posdata.Command = END_COMMAND;
     Posdata.Client_id = Game::clientID;
+
+    /* データの送信 */
+    mClient_net->SendData(&Posdata, sizeof(CONTAINER));
+}
+
+void Client_command::SendStartSignal(void)
+{
+    memset(&Posdata, 0, sizeof(CONTAINER));
+    Posdata.Command = START_SIGNAL;
 
     /* データの送信 */
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));

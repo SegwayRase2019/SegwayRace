@@ -24,8 +24,6 @@ public:
   protected:
     void UpdateRanking();
     void PlayerPosUpdate();
-    int mWindowWidth;
-    int mWindowHeight;
 
     SDL_Texture* mRankingUI[MAX_CLIENTS];
     SDL_Texture* mRacerUI[MAX_CLIENTS];

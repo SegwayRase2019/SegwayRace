@@ -16,6 +16,9 @@ public:
   static float Player_weight[MAX_CLIENTS];
   void SendEndCommand(void);
   void SendPosCommand(void);
+  void SendStartSignal(void);
+  
+  static bool isStart;
   static float Back_speed;
   static int Collisioned_oppnent;
   static bool Oppnent;
