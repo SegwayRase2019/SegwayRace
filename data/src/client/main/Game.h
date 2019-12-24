@@ -37,6 +37,8 @@ public:
   const std::string &GetText(const std::string &key);
 
   static int clientID;
+  static CONTAINER Player_difference[MAX_CLIENTS];
+  static CONTAINER Collision_difference[MAX_CLIENTS];
 
   // Getter
   class Client_net *GetClient_net(void) const { return mNet; }
@@ -88,6 +90,9 @@ private:
 
   // Track if we're updating actors right now
   bool mUpdatingActors;
+
+  float mIntervalTime;
+  float mCountTimer;
 
   // 以下は必要ない変数
   int mNum;

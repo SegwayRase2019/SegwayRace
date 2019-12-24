@@ -29,6 +29,7 @@
 
 #define PLAYER_UP_COMMAND 'U' /*お試し-座標を上に上げる*/
 #define PLAYER_COLLISION 'P'  /*プレイヤーが衝突した判定*/
+#define COLLISIONED 'C'
 
 typedef struct
 {
@@ -38,4 +39,5 @@ typedef struct
     int Client_id;
     char Command;
     int rank;
+    float speed;
 } CONTAINER;
