@@ -41,7 +41,7 @@
         "typeinfo": "cpp"
     },
     "editor.formatOnType": true,
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "C_Cpp.errorSquiggles": "Disabled"
 }

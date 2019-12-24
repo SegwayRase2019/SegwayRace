@@ -19,6 +19,7 @@ bool Client_command::isCollision;
 bool Client_command::isRepulsion = false;
 float Client_command::Back_speed = 0.0f;
 int Client_command::Collisioned_oppnent = -1;
+float Client_command::Player_weight[MAX_CLIENTS];
 bool Client_command::Oppnent = false;
 
 int Client_command::ExecuteCommand()
@@ -33,7 +34,6 @@ int Client_command::ExecuteCommand()
     if (Posdata.Client_id == Game::clientID)
     {
         // printf("Rank = %d\n", Posdata.rank);
-
     }
 
     switch (Posdata.Command)
@@ -93,6 +93,7 @@ void Client_command::SendPosCommand(void)
     Posdata.Command = PLAYER_UP_COMMAND;
     Posdata.Client_id = Game::clientID;
     Posdata.speed = MoveComponent::mForwardSpeed;
+    Posdata.weight = Player_weight[Game::clientID];
 
     /*データの送信*/
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));

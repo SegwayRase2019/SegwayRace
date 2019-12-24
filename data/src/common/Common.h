@@ -42,8 +42,8 @@ typedef struct
     char Command;
     int rank;
     float speed;
+    float weight = 50;
 } CONTAINER;
-
 
 typedef struct
 {

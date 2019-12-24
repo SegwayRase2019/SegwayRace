@@ -102,6 +102,7 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		fputs("Unable to connect\n", stderr);
 		wiifit_connect = false;
+		Client_command::Player_weight[clientID] = 50;
 		return true;
 	}
 	fputs("Wiifit_connected\n", stdout);
@@ -128,7 +129,6 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		wii_fit_thr = SDL_CreateThread(Game::Wiifit_Thread, "Wiifit_Thread", &mWiiFlag);
 	}
-
 
 	return true;
 }
@@ -504,7 +504,6 @@ int Game::Wiifit_Thread(void *data)
 	{
 		Wii_action::centroid(wiimote, &prs);			 //重心の取得
 		*wiifitEndFlag = Wii_action::move_command(&prs); //prsの情報からコマンドの判別
-		printf("体重:%f\n", prs.weight);
 	}
 	return 0;
 }

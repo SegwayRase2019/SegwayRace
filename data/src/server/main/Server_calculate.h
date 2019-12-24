@@ -23,6 +23,7 @@ public:
   static float CollisionStrage[MAX_CLIENTS];
 
   static float v2;
+  static float m2;
 
   static float SpeedStorage[MAX_CLIENTS];
 
