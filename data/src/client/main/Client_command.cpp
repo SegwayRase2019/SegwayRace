@@ -2,6 +2,7 @@
 #include "../../common/math/Math.h"
 #include "../actor/Player.h"
 #include "../component/MoveComponent.h"
+#include "../ui/HUD.h"
 
 Client_command::Client_command(Game *game)
 {
@@ -32,13 +33,14 @@ int Client_command::ExecuteCommand()
     if (Posdata.Client_id == Game::clientID)
     {
         // printf("Rank = %d\n", Posdata.rank);
+
     }
 
     switch (Posdata.Command)
     {
     case END_COMMAND:
         endFlag = 0;
-        printf("%c\n", Posdata.Command);
+        //printf("%c\n", Posdata.Command);
         break;
 
     case PLAYER_UP_COMMAND:
@@ -50,6 +52,7 @@ int Client_command::ExecuteCommand()
         PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         PlayerPosCopy[Posdata.Client_id].x = Posdata.x;
         PlayerPosCopy[Posdata.Client_id].y = Posdata.y;
+
         break;
 
     case PLAYER_COLLISION:
@@ -67,6 +70,10 @@ int Client_command::ExecuteCommand()
         CollisionVector[Game::clientID].x = Posdata.x;
         CollisionVector[Game::clientID].y = Posdata.y;
         printf("x=%lf,y=%lf\n", CollisionVector[Game::clientID].x, CollisionVector[Game::clientID].y);
+        break;
+
+    case PLAYER_RANKING:
+        PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
     }
 

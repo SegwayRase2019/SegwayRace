@@ -63,12 +63,20 @@ void HUD::Draw(SDL_Renderer* renderer)
     for(int i = 0; i < MAX_CLIENTS; i++)
     {
         DrawTexture(renderer, mRankingUI[i], uiPos, uiSize);
-        uiPos.x += (float)w * uiSize;
-        if (mRank[i]>0)
-            DrawTexture(renderer, mRacerUI[mRank[i] - 1], uiPos, uiSize);
+        uiPos.x += ((float)w * uiSize)*2;
+    }
+    for(int i = 0; i < MAX_CLIENTS; i++)
+    {
+        if (mRank[i] > 0)
+        {
+            uiPos.x = ((float)w * uiSize) * (mRank[i] * 2 - 1);
+            DrawTexture(renderer, mRacerUI[i], uiPos, uiSize);
+        }
         else
+        {
+            uiPos.x = ((float)w * uiSize) * ((i + 1) * 2 - 1);
             DrawTexture(renderer, mNoPlayerUI, uiPos, uiSize);
-        uiPos.x += (float)w * uiSize;
+        }
     }
     // ミニマップの描画
     int w2, h2;

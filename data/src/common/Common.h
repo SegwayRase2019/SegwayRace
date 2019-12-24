@@ -30,6 +30,8 @@
 #define PLAYER_UP_COMMAND 'U' /*お試し-座標を上に上げる*/
 #define PLAYER_COLLISION 'P'  /*プレイヤーが衝突した判定*/
 #define COLLISIONED 'C'
+#define PLAYER_RANKING 'R' /*プレイヤのランキング*/
+
 
 typedef struct
 {
@@ -41,3 +43,16 @@ typedef struct
     int rank;
     float speed;
 } CONTAINER;
+
+
+typedef struct
+{
+    float wlt;
+    float wrt;
+    float wlb;
+    float wrb;
+    float bal_x;
+    float bal_y;
+    float weight;
+} Prs;
+
