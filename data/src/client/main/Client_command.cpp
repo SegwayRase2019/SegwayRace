@@ -3,15 +3,17 @@
 #include "../actor/Player.h"
 #include "../ui/HUD.h"
 
-Client_command::Client_command(Game *game)
-{
-    mGame = game;
-    isCollision = false;
-}
-
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
+bool Client_command::isStart;
+
+Client_command::Client_command(Game *game)
+    : mGame(game)
+{
+    isCollision = false;
+    isStart = false;
+}
 
 int Client_command::ExecuteCommand()
 {
@@ -49,6 +51,11 @@ int Client_command::ExecuteCommand()
     case PLAYER_RANKING:
         PlayerPos[Posdata.Client_id].rank = Posdata.rank;
         break;
+
+    case START_SIGNAL:
+        if(isStart == false)
+            isStart = true;
+        break;
     }
     return endFlag;
 }
@@ -82,6 +89,15 @@ void Client_command::SendEndCommand(void)
 
     Posdata.Command = END_COMMAND;
     Posdata.Client_id = Game::clientID;
+
+    /* データの送信 */
+    mClient_net->SendData(&Posdata, sizeof(CONTAINER));
+}
+
+void Client_command::SendStartSignal(void)
+{
+    memset(&Posdata, 0, sizeof(CONTAINER));
+    Posdata.Command = START_SIGNAL;
 
     /* データの送信 */
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));

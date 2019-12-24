@@ -30,6 +30,8 @@
 #define PLAYER_UP_COMMAND 'U' /*お試し-座標を上に上げる*/
 #define PLAYER_COLLISION 'P'  /*プレイヤーが衝突した判定*/
 #define PLAYER_RANKING 'R' /*プレイヤのランキング*/
+#define START_SIGNAL 'S' /*レースがスタートした事を通知*/
+#define GOAL_SIGNAL 'G' /*プレイヤがゴールした事を通知*/
 
 typedef struct
 {

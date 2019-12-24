@@ -13,14 +13,14 @@ public:
   void Shutdown();
 
   void SetStatrtPosition();
-  float SetLocationX[MAX_CLIENTS] = {4600, 4800, 5000, 5200};
-  float SetLocationY[MAX_CLIENTS] = {5350, 5350, 5350, 5350};
+  float SetLocationX[MAX_CLIENTS] = {1000, 1200, 1400, 1600};
+  float SetLocationY[MAX_CLIENTS] = {300, 100, -100, -300};
   Vector2 Start;
   CONTAINER StartPosition[MAX_CLIENTS];
 
 private:
 #define MAP_SCALE 10
-#define BASIC_POSITION_X 1100
+#define BASIC_POSITION_X 1000
 #define POSITON_GAP 200
-#define BASIC_POSITION_Y 0
+#define BASIC_POSITION_Y 300
 };

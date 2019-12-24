@@ -62,15 +62,9 @@ Vector2 SpriteComponent::PosDelta()
     float playerRot = mOwner->GetGame()->mPlayer->GetRotation();
     float delRot = acRot - playerRot;
 
-    //Matrix3 rocal = mOwner->GetGame()->mPlayer->GetRocalTransform();
-    //Matrix3 world = mOwner->GetWorldTransform();
     Matrix3 deltaPos = Matrix3::CreateTranslation(delPl);
     Matrix3 deltaRot = Matrix3::CreateRotation(-playerRot);
     Matrix3 view = deltaPos * deltaRot;
-    //Vector2 viewPos;
-    // viewPos.x = world.mat[2][0] - rocal.mat[2][0];
-    // viewPos.y = world.mat[2][1] - rocal.mat[2][1];
-    // printf("%f\n%f\n", world.mat[2][1], rocal.mat[2][1]);
 
     Vector2 viewPos(view.mat[2][0], -view.mat[2][1]);
     viewPos += winCenter;

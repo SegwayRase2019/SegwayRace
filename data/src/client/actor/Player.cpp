@@ -3,7 +3,7 @@
 #include "../component/InputComponent.h"
 
 Player::Player(Game *game, int clientID)
-	: Actor(game), mGame(game), mClientID(clientID)
+	: Actor(game), mGame(game), mClientID(clientID), mPlState(EPreparing)
 {
 	// Create an input component and set keys/speed
 	InputComponent *ic = new InputComponent(this);
@@ -15,41 +15,12 @@ Player::Player(Game *game, int clientID)
 	ic->SetMaxAngularSpeed(Math::TwoPi);
 }
 
-void Player::Update(float deltaTime)
-{
-	if (mState == EActive)
-	{
-		ComputeRocalTransform();
-
-		UpdateComponents(deltaTime);
-		UpdateActor(deltaTime);
-
-		ComputeRocalTransform();
-	}
-}
-
 void Player::UpdateActor(float deltaTime)
 {
+	if(mPlState == ERunning)
+		UpdateComponents(deltaTime);
 }
 
 void Player::ActorInput(const uint8_t *keyState)
 {
-}
-
-void Player::ComputeRocalTransform()
-{
-	if (mRecomputeTransform)
-	{
-		mRecomputeTransform = false;
-		// Scale, then rotate, then translate
-		//mWorldTransform = Matrix3::CreateScale(mScale);
-		mRocalTransform = Matrix3::CreateTranslation(Vector2(GetPosition()));
-		mRocalTransform *= Matrix3::CreateRotation(GetRotation());
-
-		// Inform components world transform updated
-		// for (auto comp : mComponents)
-		// {
-		// 	comp->OnUpdateWorldTransform();
-		// }
-	}
 }

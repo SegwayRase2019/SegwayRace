@@ -14,8 +14,10 @@ public:
   static CONTAINER PlayerPos[MAX_CLIENTS];
   void SendEndCommand(void);
   void SendPosCommand(void);
+  void SendStartSignal(void);
 
   static bool isCollision;
+  static bool isStart;
 
 private:
   class Game *mGame;

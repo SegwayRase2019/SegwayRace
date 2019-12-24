@@ -26,7 +26,6 @@ void Actor::Update(float deltaTime)
     {
         ComputeWorldTransform();
 
-        UpdateComponents(deltaTime);
         UpdateActor(deltaTime);
 
         ComputeWorldTransform();
@@ -43,6 +42,7 @@ void Actor::UpdateComponents(float deltaTime)
 
 void Actor::UpdateActor(float deltaTime)
 {
+    UpdateComponents(deltaTime);
 }
 
 void Actor::ProcessInput(const uint8_t *command)
