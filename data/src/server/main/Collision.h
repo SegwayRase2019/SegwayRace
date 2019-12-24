@@ -14,11 +14,16 @@ public:
 
   static int Collision_Judgement(CONTAINER Posdata);
 
+  static int Collision_item(CONTAINER Posdata);
+
   static bool collision;
   static float distance;
 
   static int collision_oppnent;
   static Vector2 Collision_Vector[MAX_CLIENTS];
+  static Vector2 Item_coordinate;
+
+  static bool Item_effect;
 
   static CONTAINER PlayerPos[MAX_CLIENTS];
   static int Player_Collision_Strage[MAX_CLIENTS];
