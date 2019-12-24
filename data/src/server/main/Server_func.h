@@ -25,7 +25,10 @@ public:
   static fd_set gMask; /* select()用のマスク */
   static int gWidth;   /* gMask中のチェックすべきビット数 */
 
-  SDL_Thread *thr;
+  SDL_Thread *thr_1;
+  SDL_Thread *thr_2;
+  SDL_Thread *thr_3;
+  SDL_Thread *thr_4;
   static int endFlag;
   static bool running;
 

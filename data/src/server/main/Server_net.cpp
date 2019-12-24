@@ -148,8 +148,26 @@ void Server_net::SendData(int pos, void *data, int dataSize)
 void Server_net::Ending(void)
 {
     int i;
+    int j;
 
-    SDL_WaitThread(thr, NULL);
+    for (j = 0; j < gClientNum; j++)
+    {
+        switch (j)
+        {
+        case 0:
+            SDL_WaitThread(thr_1, NULL);
+            break;
+        case 1:
+            SDL_WaitThread(thr_2, NULL);
+            break;
+        case 2:
+            SDL_WaitThread(thr_3, NULL);
+            break;
+        case 3:
+            SDL_WaitThread(thr_4, NULL);
+            break;
+        }
+    }
 
     printf("... Connection closed\n");
     for (i = 0; i < gClientNum; i++)
@@ -173,7 +191,21 @@ int Server_net::MultiAccept(int request_soc, int num)
         else
         {
             /* スレッドの作成*/
-            thr = SDL_CreateThread(NetworkEvent, "NetworkThread", &endFlag);
+            switch (i)
+            {
+            case 0:
+                thr_1 = SDL_CreateThread(NetworkEvent, "NetworkThread_1", &endFlag);
+                break;
+            case 1:
+                thr_2 = SDL_CreateThread(NetworkEvent, "NetworkThread_2", &endFlag);
+                break;
+            case 2:
+                thr_3 = SDL_CreateThread(NetworkEvent, "NetworkThread_3", &endFlag);
+                break;
+            case 3:
+                thr_4 = SDL_CreateThread(NetworkEvent, "NetworkThread_4", &endFlag);
+                break;
+            }
             Enter(i, fd);
         }
     }
@@ -246,7 +278,7 @@ int Server_net::NetworkEvent(void *data)
         countTime = SDL_GetTicks();
         *endflag = SendRecvManager();
         if (running == false)
-            endflag = 0;
+            *endflag = 0;
     }
     printf("スレッドの終了\n");
     running = false;
