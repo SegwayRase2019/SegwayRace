@@ -36,8 +36,6 @@ HUD::HUD(Game* game)
     mNoPlayerUI = mGame->GetClient_window()->GetTexture("assets/images/Player_nothing.png");
     mMapUI = mGame->GetClient_window()->GetTexture("assets/images/StageRoad.png");
     mMapBaseUI = mGame->GetClient_window()->GetTexture("assets/images/StageUIBase.png");
-    mWindowWidth = mGame->GetClient_window()->GetWidth();
-    mWindowHeight = mGame->GetClient_window()->GetHeight();
 }
 
 HUD::~HUD()

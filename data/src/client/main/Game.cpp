@@ -358,6 +358,8 @@ void Game::UpdateGame()
 		mCommand->isCollision = false;
 		Client_command::isRepulsion = true;
 	}
+	if(mCommand->isStart == true)
+		mPlayer->SetPlayerState(Player::PlayerState::ERunning);
 
 	// Add any dead actors to a temp vector
 	std::vector<Actor *>
