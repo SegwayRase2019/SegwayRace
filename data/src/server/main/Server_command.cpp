@@ -24,7 +24,7 @@ int Server_command::ExecuteCommand(int pos)
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
-	if (Posdata.Command != END_COMMAND)
+	if (Posdata.Command != END_COMMAND )
 	{
 		Collision::Collision_Judgement(Posdata); //当たり判定
 
@@ -49,12 +49,16 @@ int Server_command::ExecuteCommand(int pos)
 
 		/*クライアント側に構造体を送る*/
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+		Posdata.Command = PLAYER_RANKING;
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 
 		break;
 	}
 	case PLAYER_COLLISION:
 	{
 		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
+		Posdata.Command = PLAYER_RANKING;
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
 	default:

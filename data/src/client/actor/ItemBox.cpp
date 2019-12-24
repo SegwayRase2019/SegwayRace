@@ -4,22 +4,26 @@
 #include "../component/ItemComponent.h"
 #include "../component/SpriteComponent.h"
 #include "./Player.h"
+#include "../../server/main/Collision.h"
 
 ItemBox::ItemBox(Game *game)
     : Actor(game), mIntervalTime(5), mCountTime(0)
 {
     SpriteComponent *sc = new SpriteComponent(this, 50);
     sc->SetTexture(game->GetClient_window()->GetTexture("assets/images/ItemBox.png"));
-    ItemComponent *itc = new ItemComponent(this);
+    //ItemComponent *itc = new ItemComponent(this);
+    Vector2 startpos(1500, -100);
+    SetPosition(startpos);
 }
 
 void ItemBox::UpdateActor(float deltaTime)
 {
+    //bool collision = coll->Collision_item(mGame->mPlayer->GetPosition(),GetPosition());
 
-    if (SDL_SCANCODE_I)
-    {
-        Actor::SetState(EInactive);
-    }
+    // if (SDL_SCANCODE_I)
+    // {
+    //     Actor::SetState(EInactive);
+    // }
     if (Actor::GetState() == EInactive)
     {
         mCountTime += deltaTime;

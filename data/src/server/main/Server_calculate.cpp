@@ -10,19 +10,27 @@ float Calculate::Player_angle_copy[MAX_CLIENTS];
 float Calculate::Player_laps[MAX_CLIENTS] = {0, 0, 0, 0};
 bool Calculate::Warnig_mode = false;
 float Calculate::Before_degree[MAX_CLIENTS];
+float Calculate::CollisionStrage[MAX_CLIENTS] = {0, 0, 0, 0};
+float Calculate::v2 = 0; //衝突された方の速度
+float Calculate::SpeedStorage[MAX_CLIENTS];
+float Calculate::m2;
 
 int Calculate::Player_restitution(CONTAINER Posdata)
 {
-    float v1;    //衝突した方の速度
-    float v2;    //衝突された方の速度
-    float mv1;   //衝突後の衝突した方の速度
-    float mv2;   //衝突後の衝突された方の速度
-    float m1;    //衝突した方の質量
-    float m2;    //衝突された方の質量
-    float e = 1; //0<=e<=1の間の反発係数
+    float v1 = Server_command::Posdata.speed;                  //衝突した方の速度
+    float mv1 = 0;                                             //衝突後の衝突した方の速度
+    float mv2 = 0;                                             //衝突後の衝突された方の速度
+    float m1 = Collision::PlayerPos[Posdata.Client_id].weight; //衝突した方の質量
+    float e = 0.5f;                                            //0<=e<=1の間の反発係数
 
     mv1 = ((m1 - e * m2) * v1 + (m2 + e * m2) * v2) / (m1 + m2);
     mv2 = ((m2 - e * m1) * v2 - (m1 + e * m1) * v1) / (m1 + m2);
+    Server_command::Posdata.speed = mv1;
+
+    SpeedStorage[Collision::collision_oppnent] = mv2;
+
+    Collision::Player_Collision_Strage[Collision::collision_oppnent] = 1;
+    printf("m1 = %lf,m2 = %lf\n", m1, m2);
 }
 
 int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
@@ -74,5 +82,4 @@ int Calculate::Calculate_angle()
         Player_angle_copy[i] = degree + (360 * Player_laps[i]);
         Before_degree[i] = degree;
     }
-    printf("degree = %f\n", Player_angle[0]);
 }

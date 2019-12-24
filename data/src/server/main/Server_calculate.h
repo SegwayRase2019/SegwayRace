@@ -20,6 +20,12 @@ public:
 
   static bool Warnig_mode;
   static float Before_degree[MAX_CLIENTS];
+  static float CollisionStrage[MAX_CLIENTS];
+
+  static float v2;
+  static float m2;
+
+  static float SpeedStorage[MAX_CLIENTS];
 
 private:
 #define SIZE_OF_ANGLE(Player_angle) (sizeof(Player_angle) / sizeof(Player_angle[0]))

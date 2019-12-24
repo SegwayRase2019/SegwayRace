@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./MoveComponent.h"
+#include "../../common/Common.h"
 #include <cstdint>
 
 class InputComponent : public MoveComponent
@@ -10,6 +11,8 @@ class InputComponent : public MoveComponent
 	InputComponent(class Actor *owner);
 
 	void ProcessInput(const uint8_t *keyState) override;
+
+	void WiifitProcessInput(Prs *prs);
 
 	// Getters/setters for private variables
 	float GetMaxForward() const { return mMaxForwardSpeed; }
