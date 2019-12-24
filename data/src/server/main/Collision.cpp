@@ -60,6 +60,7 @@ int Collision::Player_Collision(CONTAINER Posdata)
         PlayerPos[Posdata.Client_id].x = Posdata.x;
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].speed = Posdata.speed;
+        PlayerPos[Posdata.Client_id].weight = Posdata.weight;
     }
 
     if (collision == true)
@@ -70,6 +71,7 @@ int Collision::Player_Collision(CONTAINER Posdata)
         Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
         Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
         Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
+        Calculate::m2 = PlayerPos[collision_oppnent].weight; //衝突された方の質量
         Calculate::Player_restitution(Posdata);
     }
     collision = false;
@@ -136,6 +138,7 @@ int Collision::Stage_Collision(CONTAINER Posdata)
     {
         Calculate::v2 = 0;
         collision_oppnent = -1;
+        Calculate::m2 = PlayerPos[Posdata.Client_id].weight;
         Calculate::Player_restitution(Posdata);
     }
 }

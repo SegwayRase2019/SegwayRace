@@ -40,6 +40,7 @@ void Wii_action::centroid(cwiid_wiimote_t *wiimote, Prs *prs)
     printf("balance %6f %6f %6f\n\n", prs->bal_x, prs->bal_y, sqrt((pow(prs->bal_x, 2) + pow(prs->bal_y, 2))));
 */
     //sleep(1);
+    Client_command::Player_weight[Game::clientID] = prs->wlt + prs->wrt + prs->wlb + prs->wrb;
     SDL_Delay(50);
 }
 

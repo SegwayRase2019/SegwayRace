@@ -13,6 +13,7 @@ public:
   static int ExecuteCommand();
   static CONTAINER PlayerPos[MAX_CLIENTS];
   static CONTAINER PlayerPosCopy[MAX_CLIENTS];
+  static float Player_weight[MAX_CLIENTS];
   void SendEndCommand(void);
   void SendPosCommand(void);
   static float Back_speed;

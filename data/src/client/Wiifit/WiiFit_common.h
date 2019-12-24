@@ -11,6 +11,7 @@ extern "C" {
 #include "../../common/Common.h"
 #include "../main/Game.h"
 #include "../component/InputComponent.h"
+#include "../main/Client_func.h"
 
 class Wii_action
 {
