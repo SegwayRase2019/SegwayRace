@@ -15,7 +15,6 @@
 
 Game::Game()
 	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0)
-
 {
 }
 
@@ -298,7 +297,7 @@ void Game::UpdateGame()
 		mRacer[i]->SetRotation(rot);
 	}
 
-	if (Client_command::isRepulsion == true)
+	if (Client_command::isRepulsion == true && mPlayer->GetPlayerState() == Player::PlayerState::ERunning)
 	{
 		Vector2 pos;
 
@@ -358,8 +357,13 @@ void Game::UpdateGame()
 		mCommand->isCollision = false;
 		Client_command::isRepulsion = true;
 	}
-	if(mCommand->isStart == true)
+	if (mCommand->isStart == true)
 		mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+	if (mCommand->isGoal[clientID] == true)
+	{
+		mPlayer->SetPlayerState(Player::PlayerState::EGoal);
+		mCommand->isStart = false;
+	}
 
 	// Add any dead actors to a temp vector
 	std::vector<Actor *>

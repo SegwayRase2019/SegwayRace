@@ -23,6 +23,7 @@ public:
   void SetPosition(Vector2 pos) { Actor::SetPosition(pos); }
   float GetRotation() const { return Actor::GetRotation(); }
   void SetRotation(float rot) { Actor::SetRotation(rot); }
+  const PlayerState &GetPlayerState() const { return mPlState; }
   void SetPlayerState(PlayerState state) { mPlState = state; }
 
   void ComputeRocalTransform();

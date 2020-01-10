@@ -24,7 +24,7 @@ int Server_command::ExecuteCommand(int pos)
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
-	if (Posdata.Command != END_COMMAND )
+	if (Posdata.Command != END_COMMAND)
 	{
 		Collision::Collision_Judgement(Posdata); //当たり判定
 
@@ -64,12 +64,19 @@ int Server_command::ExecuteCommand(int pos)
 	case START_SIGNAL:
 	{
 		dataSize = 0;
-		printf("command=%c\n", Posdata.Command);
 
 		/* 全ユーザーに送る */
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 
 		break;
+	}
+	case GOAL_SIGNAL:
+	{
+		dataSize = 0;
+		printf("command=%c\n", Posdata.Command);
+
+		/* 全ユーザーに送る */
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 	}
 	default:
 		/* 未知のコマンドが送られてきた */

@@ -30,20 +30,19 @@ int Calculate::Player_restitution(CONTAINER Posdata)
     SpeedStorage[Collision::collision_oppnent] = mv2;
 
     Collision::Player_Collision_Strage[Collision::collision_oppnent] = 1;
-    printf("m1 = %lf,m2 = %lf\n", m1, m2);
 }
 
 int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
 {
-
     Calculate_angle();
     std::sort(Player_angle, Player_angle + SIZE_OF_ANGLE(Player_angle), std::greater<float>()); //降順にソート
     for (int j = 0; j < Server_net::gClientNum; j++)
     {
-
         if (Player_angle_copy[Posdata.Client_id] == Player_angle[j])
         {
             Server_command::Posdata.rank = j + 1;
+            if (Before_degree[j] < 360 && Player_angle[j] >= 360)
+                Server_command::Posdata.Command = GOAL_SIGNAL;
             break;
         }
     }

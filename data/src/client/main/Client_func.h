@@ -17,8 +17,9 @@ public:
   void SendEndCommand(void);
   void SendPosCommand(void);
   void SendStartSignal(void);
-  
+
   static bool isStart;
+  static bool isGoal[MAX_CLIENTS];
   static float Back_speed;
   static int Collisioned_oppnent;
   static bool Oppnent;

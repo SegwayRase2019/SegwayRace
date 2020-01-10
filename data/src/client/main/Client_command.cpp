@@ -8,6 +8,7 @@ CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
 bool Client_command::isStart;
+bool Client_command::isGoal[MAX_CLIENTS];
 CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
 CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
 Vector2 Client_command::CollisionVector[MAX_CLIENTS];
@@ -22,31 +23,25 @@ Client_command::Client_command(Game *game)
 {
     isCollision = false;
     isStart = false;
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        isGoal[i] = false;
 }
 
 int Client_command::ExecuteCommand()
 {
-
     int endFlag = 1;
 
     memset(&Posdata, 0, sizeof(CONTAINER));
 
     Client_net::RecvData(&Posdata, sizeof(Posdata));
 
-    if (Posdata.Client_id == Game::clientID)
-    {
-        // printf("Rank = %d\n", Posdata.rank);
-    }
-
     switch (Posdata.Command)
     {
     case END_COMMAND:
         endFlag = 0;
-        //printf("%c\n", Posdata.Command);
         break;
 
     case PLAYER_UP_COMMAND:
-        //printf("id=%d,x=%f,y=%f,rot=%f\n", Posdata.Client_id, Posdata.x, Posdata.y, Posdata.rot);
         PlayerPos[Posdata.Client_id].x = Posdata.x;
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;
@@ -60,7 +55,6 @@ int Client_command::ExecuteCommand()
     case PLAYER_COLLISION:
         isCollision = true;
         Back_speed = std::abs(Posdata.speed);
-        printf("backspeed=%lf\n", Back_speed);
 
         CollisionPos[Posdata.Client_id].x = Posdata.x;
         CollisionPos[Posdata.Client_id].y = Posdata.y;
@@ -71,7 +65,6 @@ int Client_command::ExecuteCommand()
         Collisioned_oppnent = Posdata.Client_id;
         CollisionVector[Game::clientID].x = Posdata.x;
         CollisionVector[Game::clientID].y = Posdata.y;
-        printf("x=%lf,y=%lf\n", CollisionVector[Game::clientID].x, CollisionVector[Game::clientID].y);
         break;
 
     case PLAYER_RANKING:
@@ -79,8 +72,12 @@ int Client_command::ExecuteCommand()
         break;
 
     case START_SIGNAL:
-        if(isStart == false)
+        if (isStart == false)
             isStart = true;
+        break;
+    case GOAL_SIGNAL:
+        if (isGoal[Posdata.Client_id] == false)
+            isGoal[Posdata.Client_id] = true;
         break;
     }
 
@@ -108,12 +105,6 @@ void Client_command::SendPosCommand(void)
 
 void Client_command::SendEndCommand(void)
 {
-
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("SendEndCommand()\n");
-#endif
-
     memset(&Posdata, 0, sizeof(CONTAINER));
 
     Posdata.Command = END_COMMAND;
