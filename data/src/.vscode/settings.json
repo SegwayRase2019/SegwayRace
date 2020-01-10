@@ -38,7 +38,8 @@
         "thread": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "sstream": "cpp"
     },
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
