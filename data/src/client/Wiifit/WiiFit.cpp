@@ -31,15 +31,6 @@ void Wii_action::centroid(cwiid_wiimote_t *wiimote, Prs *prs)
     else
         prs->bal_y -= 1;
 
-    /*printf("%6.1f kg  %6.1f kg    %04x %04x     (%5.1f kg)\n%6.1f kg  %6.1f kg    %04x %04x\n\n",
-           prs->wlt, prs->wrt,
-           state.ext.balance.left_top, state.ext.balance.right_top,
-           prs->wlt + prs->wrt + prs->wlb + prs->wrb,
-           prs->wlb, prs->wrb,
-           state.ext.balance.left_bottom, state.ext.balance.right_bottom);
-    printf("balance %6f %6f %6f\n\n", prs->bal_x, prs->bal_y, sqrt((pow(prs->bal_x, 2) + pow(prs->bal_y, 2))));
-*/
-    //sleep(1);
     Client_command::Player_weight[Game::clientID] = prs->wlt + prs->wrt + prs->wlb + prs->wrb;
     SDL_Delay(50);
 }

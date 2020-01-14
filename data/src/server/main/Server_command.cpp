@@ -13,6 +13,9 @@ Server_command::Server_command(Server_net *net)
 }
 
 CONTAINER Server_command::Posdata;
+bool Server_command::Goal_Status[MAX_CLIENTS];
+int Server_command::Result_Rank[MAX_CLIENTS];
+int Server_command::final_rank = 0;
 
 int Server_command::ExecuteCommand(int pos)
 {
@@ -26,9 +29,8 @@ int Server_command::ExecuteCommand(int pos)
 
 	if (Posdata.Command != END_COMMAND)
 	{
-		Collision::Collision_Judgement(Posdata); //当たり判定
-
 		Calculate::Stage_rank(Posdata);
+		Collision::Collision_Judgement(Posdata); //当たり判定
 	}
 
 	switch (Posdata.Command)
@@ -36,7 +38,6 @@ int Server_command::ExecuteCommand(int pos)
 	case END_COMMAND:
 	{
 		dataSize = 0;
-		printf("command=%c\n", Posdata.Command);
 
 		/* 全ユーザーに送る */
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
@@ -73,10 +74,15 @@ int Server_command::ExecuteCommand(int pos)
 	case GOAL_SIGNAL:
 	{
 		dataSize = 0;
-		printf("command=%c\n", Posdata.Command);
 
 		/* 全ユーザーに送る */
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+		break;
+	}
+	case FINISH_COMMAND:
+	{
+
+		break;
 	}
 	default:
 		/* 未知のコマンドが送られてきた */
