@@ -322,7 +322,6 @@ void Game::UpdateGame()
 			Client_command::isRepulsion = false;
 			Client_command::Collisioned_oppnent = -1;
 			mCountTimer = 0;
-			printf("下がる\n");
 			if (Client_command::isCollision == true)
 			{
 				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;

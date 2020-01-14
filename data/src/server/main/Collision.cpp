@@ -68,14 +68,17 @@ int Collision::Player_Collision(CONTAINER Posdata)
 
     if (collision == true)
     {
-        printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
-        Server_command::Posdata.Command = PLAYER_COLLISION;
-        Calculate::v2 = PlayerPos[collision_oppnent].speed;
-        Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
-        Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
-        Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
-        Calculate::m2 = PlayerPos[collision_oppnent].weight; //衝突された方の質量
-        Calculate::Player_restitution(Posdata);
+        if (Server_command::Goal_Status[collision_oppnent] != true)
+        {
+            printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
+            Server_command::Posdata.Command = PLAYER_COLLISION;
+            Calculate::v2 = PlayerPos[collision_oppnent].speed;
+            Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
+            Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
+            Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
+            Calculate::m2 = PlayerPos[collision_oppnent].weight; //衝突された方の質量
+            Calculate::Player_restitution(Posdata);
+        }
     }
     collision = false;
 }
@@ -153,14 +156,14 @@ int Collision::Collision_item(CONTAINER Posdata)
     Item_coordinate.y = 0;
     Item_effect = false;
 
-    float radious = 70;//半径
+    float radious = 70; //半径
 
     float a = std::abs(Posdata.x - Item_coordinate.x);
     float b = std::abs(Posdata.y - Item_coordinate.y);
 
     float Item_distance = std::sqrt((a * a) + (b * b));
 
-    if(Item_distance<radious)
+    if (Item_distance < radious)
     {
         Item_effect = true;
     }
