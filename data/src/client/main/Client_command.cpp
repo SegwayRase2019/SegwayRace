@@ -79,8 +79,11 @@ int Client_command::ExecuteCommand()
         break;
 
     case START_SIGNAL:
-        if(isStart == false)
+        if (isStart == false)
             isStart = true;
+        break;
+
+    case Item_COLLISION:
         break;
     }
 
