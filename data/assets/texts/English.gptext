@@ -1,6 +1,7 @@
 {
 	"TextMap":{
 		"PauseTitle": "PAUSED",
+		"ResultTitle":"RESULT",
 		"ResumeButton": "Resume",
 		"QuitButton": "Quit",
 		"QuitText": "Do you want to quit?",

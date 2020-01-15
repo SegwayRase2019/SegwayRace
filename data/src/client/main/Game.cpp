@@ -5,6 +5,7 @@
 #include "../actor/Stage.h"
 #include "../ui/Button.h"
 #include "../ui/HUD.h"
+#include "../ui/Resultwindow.h"
 #include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
 #include <SDL2/SDL.h>
@@ -242,6 +243,21 @@ void Game::ProcessInput()
 		{
 		case SDL_QUIT:
 			mCommand->SendEndCommand();
+			break;
+		case SDL_KEYDOWN:
+			if (!event.key.repeat)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case '1':
+					//class Resultwindow *result = new Resultwindow(this);
+					break;
+				}
+				if (!mUIStack.empty())
+				{
+					mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+				}
+			}
 			break;
 		}
 	}

@@ -7,15 +7,20 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 Canvas::Canvas(class Game *game)
-    : mGame(game), mTitle(nullptr), mBackGround(nullptr), mTitlePos(200.0f, 10.0f), mNextButtonPos(300.0f, 400.0f), mBGPos(0.0f, 0.0f), mState(EActive)
+    : mGame(game), mTitle(nullptr), mBackGround(nullptr), mNextButtonPos(300.0f, 400.0f), mBGPos(0.0f, 0.0f), mState(EActive)
 {
     mGame->PushUI(this);
     mFont = mGame->GetFont("assets/fonts/Default.ttf");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonYellow.png");
-    mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonBlue.png");
+    mButtonOff = mGame->GetClient_window()->GetTexture("assets/images/ButtonBlue.png");
 
     mWindowWidth = mGame->GetClient_window()->GetWidth();
     mWindowHeight = mGame->GetClient_window()->GetHeight();
+
+    mClientNum = mGame->GetClientNum();
+
+    mTitlePos.x = mWindowWidth / 2;
+    mTitlePos.y = mWindowHeight / 10;
 }
 
 Canvas::~Canvas()
@@ -122,12 +127,16 @@ void Canvas::SetTitle(const std::string &text,
         mTitle = nullptr;
     }
     mTitle = mFont->RenderText(text, color, pointSize);
+    int w, h;
+    SDL_QueryTexture(mTitle, NULL, NULL, &w, &h);
+    mTitlePos.x -= (float)w / 2;
+    mTitlePos.y -= (float)h / 2;
 }
 
 void Canvas::AddButton(const std::string &name, std::function<void()> onClick)
 {
     int w, h;
-    SDL_QueryTexture(mButtonOn, nullptr, nullptr, &w, &h);
+    SDL_QueryTexture(mButtonOn, NULL, NULL, &w, &h);
     Vector2 dims(static_cast<float>(w),
                  static_cast<float>(h));
     Button *b = new Button(name, mFont, onClick, mNextButtonPos, dims);
@@ -146,8 +155,8 @@ void Canvas::DrawTexture(SDL_Renderer *renderer, SDL_Texture *texture,
     SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
     SDL_Rect r;
-    r.w = static_cast<int>(w*scale);
-    r.h = static_cast<int>(h*scale);
+    r.w = static_cast<int>(w * scale);
+    r.h = static_cast<int>(h * scale);
 
     r.x = static_cast<int>(offset.x);
     r.y = static_cast<int>(offset.y);

@@ -1,6 +1,5 @@
 #include "./Font.h"
 #include "../main/Client_window.h"
-#include <SDL2/SDL.h>
 #include <vector>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL.h>
@@ -72,7 +71,6 @@ SDL_Texture *Font::RenderText(const std::string &textKey,
         if (surf != nullptr)
         {
             texture = mGame->GetClient_window()->CreateFromSurface(surf);
-            SDL_FreeSurface(surf);
         }
     }
     else
