@@ -81,7 +81,7 @@ int Server_command::ExecuteCommand(int pos)
 	}
 	case FINISH_COMMAND:
 	{
-
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
 	default:

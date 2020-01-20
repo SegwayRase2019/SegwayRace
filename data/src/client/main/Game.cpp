@@ -17,7 +17,7 @@
 #include "Music.h"
 
 Game::Game()
-	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0)
+	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0), mGameState(ERunning)
 {
 }
 
@@ -300,53 +300,50 @@ void Game::UpdateGame()
 	Sound::UpdateMusicVolume();
 
 	// Update all actors
-	mUpdatingActors = true;
-	for (auto actor : mActors)
+	if (mGameState == ERunning)
 	{
-		actor->Update(deltaTime);
-	}
-	mUpdatingActors = false;
-
-	// Move any pending actors to mActors
-	for (auto pending : mPendingActors)
-	{
-		mActors.emplace_back(pending);
-	}
-	mPendingActors.clear();
-
-	mCommand->SendPosCommand();
-
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		Vector2 pos;
-		float rot;
-		pos.x = mCommand->PlayerPos[i].x;
-		pos.y = mCommand->PlayerPos[i].y;
-
-		rot = mCommand->PlayerPos[i].rot;
-		mRacer[i]->SetPosition(pos);
-		mRacer[i]->SetRotation(rot);
-	}
-
-	if (Client_command::isRepulsion == true && mPlayer->GetPlayerState() == Player::PlayerState::ERunning)
-	{
-		Vector2 pos;
-
-		if (Client_command::Collisioned_oppnent == -1)
+		mUpdatingActors = true;
+		for (auto actor : mActors)
 		{
-			mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Player_difference[clientID].x * deltaTime * 0.5f;
-			mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Player_difference[clientID].y * deltaTime * 0.5f;
+			actor->Update(deltaTime);
 		}
-		else
+		mUpdatingActors = false;
+
+		// Move any pending actors to mActors
+		for (auto pending : mPendingActors)
 		{
-			mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
-			mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
+			mActors.emplace_back(pending);
+		}
+		mPendingActors.clear();
+
+		mCommand->SendPosCommand();
+
+		for (int i = 0; i < MAX_CLIENTS; i++)
+		{
+			Vector2 pos;
+			float rot;
+			pos.x = mCommand->PlayerPos[i].x;
+			pos.y = mCommand->PlayerPos[i].y;
+
+			rot = mCommand->PlayerPos[i].rot;
+			mRacer[i]->SetPosition(pos);
+			mRacer[i]->SetRotation(rot);
 		}
 
-		pos.x = mCommand->PlayerPos[clientID].x;
-		pos.y = mCommand->PlayerPos[clientID].y;
-		mPlayer->SetPosition(pos);
+		if (Client_command::isRepulsion == true && mPlayer->GetPlayerState() == Player::PlayerState::ERunning)
+		{
+			Vector2 pos;
 
+			if (Client_command::Collisioned_oppnent == -1)
+			{
+				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Player_difference[clientID].x * deltaTime * 0.5f;
+				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Player_difference[clientID].y * deltaTime * 0.5f;
+			}
+			else
+			{
+				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
+				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
+			}
 		mCountTimer += deltaTime;
 		if (mCountTimer > mIntervalTime)
 		{
@@ -357,28 +354,49 @@ void Game::UpdateGame()
 
 			if (Client_command::isCollision == true)
 			{
-				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
-				mCommand->PlayerPos[clientID].y = Client_command::PlayerPosCopy[clientID].y;
-				pos.x = mCommand->PlayerPos[clientID].x;
-				pos.y = mCommand->PlayerPos[clientID].y;
-				mPlayer->SetPosition(pos);
-				mRacer[clientID]->SetPosition(pos);
+				Client_command::isRepulsion = false;
+				Client_command::Collisioned_oppnent = -1;
+				mCountTimer = 0;
+				if (Client_command::isCollision == true)
+				{
+					mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
+					mCommand->PlayerPos[clientID].y = Client_command::PlayerPosCopy[clientID].y;
+					pos.x = mCommand->PlayerPos[clientID].x;
+					pos.y = mCommand->PlayerPos[clientID].y;
+					mPlayer->SetPosition(pos);
+					mRacer[clientID]->SetPosition(pos);
+				}
 			}
 		}
-	}
 
-	if (mCommand->isCollision == true)
-	{
-		Vector2 pos;
-		if (Client_command::Collisioned_oppnent == -1)
+		if (mCommand->isCollision == true)
 		{
-			Player_difference[clientID].x = mCommand->CollisionPos[clientID].x - mCommand->PlayerPos[clientID].x;
-			Player_difference[clientID].y = mCommand->CollisionPos[clientID].y - mCommand->PlayerPos[clientID].y;
+			Vector2 pos;
+			if (Client_command::Collisioned_oppnent == -1)
+			{
+				Player_difference[clientID].x = mCommand->CollisionPos[clientID].x - mCommand->PlayerPos[clientID].x;
+				Player_difference[clientID].y = mCommand->CollisionPos[clientID].y - mCommand->PlayerPos[clientID].y;
+			}
+			else
+			{
+				Collision_difference[clientID].x = mCommand->CollisionVector[clientID].x;
+				Collision_difference[clientID].y = mCommand->CollisionVector[clientID].y;
+			}
+
+			pos.x = mCommand->PlayerPos[clientID].x;
+			pos.y = mCommand->PlayerPos[clientID].y;
+			mPlayer->SetPosition(pos);
+			mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
+
+			mCommand->isCollision = false;
+			Client_command::isRepulsion = true;
 		}
-		else
+		if (mCommand->isStart == true)
+			mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+		if (mCommand->isGoal[clientID] == true)
 		{
-			Collision_difference[clientID].x = mCommand->CollisionVector[clientID].x;
-			Collision_difference[clientID].y = mCommand->CollisionVector[clientID].y;
+			mPlayer->SetPlayerState(Player::PlayerState::EGoal);
+			mCommand->isStart = false;
 		}
 
 		pos.x = mCommand->PlayerPos[clientID].x;
@@ -410,16 +428,17 @@ void Game::UpdateGame()
 	std::vector<Actor *>
 		deadActors;
 	for (auto actor : mActors)
-	{
-		if (actor->GetState() == Actor::EDead)
 		{
-			deadActors.emplace_back(actor);
+			if (actor->GetState() == Actor::EDead)
+			{
+				deadActors.emplace_back(actor);
+			}
 		}
-	}
 
-	for (auto actor : deadActors)
-	{
-		delete actor;
+		for (auto actor : deadActors)
+		{
+			delete actor;
+		}
 	}
 
 	// UIの更新
@@ -443,6 +462,12 @@ void Game::UpdateGame()
 		{
 			++iter;
 		}
+	}
+
+	if (mCommand->isFinish == true && mGameState == ERunning)
+	{
+		class Resultwindow *result = new Resultwindow(this);
+		mGameState = EFinished;
 	}
 }
 

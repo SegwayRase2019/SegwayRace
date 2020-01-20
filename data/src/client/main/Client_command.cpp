@@ -10,6 +10,7 @@ CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
 bool Client_command::isStart;
 bool Client_command::isGoal[MAX_CLIENTS];
+bool Client_command::isFinish;
 CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
 CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
 Vector2 Client_command::CollisionVector[MAX_CLIENTS];
@@ -24,6 +25,9 @@ Client_command::Client_command(Game *game)
 {
     isCollision = false;
     isStart = false;
+    isFinish = false;
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        isGoal[i] = false;
 }
 
 int Client_command::ExecuteCommand()
@@ -80,6 +84,10 @@ int Client_command::ExecuteCommand()
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
             isGoal[Posdata.Client_id] = true;
+        break;
+    case FINISH_COMMAND:
+        isFinish = true;
+        break;
     }
 
     return endFlag;

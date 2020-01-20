@@ -8,7 +8,7 @@
 Resultwindow::Resultwindow(Game *game)
     : Canvas(game)
 {
-    SetTitle("リザルト画面");
+    SetTitle("RESULT", Color::Red, 68);
     mBackGround = mGame->GetClient_window()->GetTexture("assets/images/ResultBG.png");
     for (int i = 0; i < mClientNum; i++)
     {

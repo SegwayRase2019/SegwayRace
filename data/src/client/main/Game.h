@@ -12,6 +12,11 @@
 class Game
 {
 public:
+  enum GameState
+  {
+    ERunning,
+    EFinished
+  };
   Game();
   // Initialize the game
   bool Initialize(int, char *[]);
@@ -112,8 +117,7 @@ private:
   float mIntervalTime;
   float mCountTimer;
 
-  
-  // 以下は必要ない変数
+  GameState mGameState;
 
   int mNum;
 };
