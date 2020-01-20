@@ -11,8 +11,10 @@
 #include <SDL2/SDL.h>
 #include <algorithm>
 #include <cmath>
+#include <SDL2/SDL_mixer.h>
 #include <fstream>
 #include <sstream>
+#include "Music.h"
 
 Game::Game()
 	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0)
@@ -22,10 +24,12 @@ Game::Game()
 int Game::clientID;
 CONTAINER Game::Player_difference[MAX_CLIENTS];
 CONTAINER Game::Collision_difference[MAX_CLIENTS];
+int Game::volume = 50;
 
 Prs Game::prs;
 
 char Game::command;
+bool Start_BGM = false;
 
 cwiid_wiimote_t *wiimote = NULL; //WiiBalanceBoardの情報
 
@@ -95,6 +99,9 @@ bool Game::Initialize(int argc, char *argv[])
 	mHUD = new HUD(this);
 
 	stage->SetStatrtPosition();
+
+	class Sound *sound = new Sound(this);
+	sound->Sound_Initialize();
 
 	//ここからwiifitの初期化
 
@@ -245,20 +252,25 @@ void Game::ProcessInput()
 			mCommand->SendEndCommand();
 			break;
 		case SDL_KEYDOWN:
-			if (!event.key.repeat)
+			switch (event.key.keysym.sym)
 			{
-				switch (event.key.keysym.sym)
+			case SDLK_UP:
+				volume++;
+				if (volume > 128)
 				{
-				case '1':
-					//class Resultwindow *result = new Resultwindow(this);
-					break;
+					volume = 128;
 				}
-				if (!mUIStack.empty())
+				break;
+			case SDLK_DOWN:
+				volume--;
+				if (volume < 0)
 				{
-					mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+					volume = 0;
 				}
+				break;
+			default:
+				break;
 			}
-			break;
 		}
 	}
 
@@ -283,6 +295,9 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 	mTicksCount = SDL_GetTicks();
+
+	//Update music volume
+	Sound::UpdateMusicVolume();
 
 	// Update all actors
 	mUpdatingActors = true;
@@ -338,6 +353,8 @@ void Game::UpdateGame()
 			Client_command::isRepulsion = false;
 			Client_command::Collisioned_oppnent = -1;
 			mCountTimer = 0;
+			Sound::Collision_Sound();
+
 			if (Client_command::isCollision == true)
 			{
 				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
@@ -373,7 +390,16 @@ void Game::UpdateGame()
 		Client_command::isRepulsion = true;
 	}
 	if (mCommand->isStart == true)
+	{
 		mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+
+		if (Start_BGM == false)
+		{
+			class Sound *sound = new Sound(this);
+			sound->BackGroundMusic();
+			Start_BGM = true;
+		}
+	}
 	if (mCommand->isGoal[clientID] == true)
 	{
 		mPlayer->SetPlayerState(Player::PlayerState::EGoal);

@@ -60,6 +60,8 @@ public:
   static char command; //転送するコマンド
   bool wiifit_connect = true;
 
+  static int volume;
+
 private:
   class Client_net *mNet;
   class Client_window *mWindow;
@@ -109,6 +111,9 @@ private:
 
   float mIntervalTime;
   float mCountTimer;
+
+  
+  // 以下は必要ない変数
 
   int mNum;
 };
