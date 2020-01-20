@@ -10,7 +10,7 @@ Canvas::Canvas(class Game *game)
     : mGame(game), mTitle(nullptr), mBackGround(nullptr), mNextButtonPos(300.0f, 400.0f), mBGPos(0.0f, 0.0f), mState(EActive)
 {
     mGame->PushUI(this);
-    mFont = mGame->GetFont("assets/fonts/Default.ttf");
+    mFont = mGame->GetFont("assets/fonts/Bitter-Bold.otf");
     mButtonOn = mGame->GetClient_window()->GetTexture("assets/images/ButtonYellow.png");
     mButtonOff = mGame->GetClient_window()->GetTexture("assets/images/ButtonBlue.png");
 
