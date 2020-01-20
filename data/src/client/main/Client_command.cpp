@@ -3,6 +3,7 @@
 #include "../actor/Player.h"
 #include "../component/MoveComponent.h"
 #include "../ui/HUD.h"
+#include "Music.h"
 
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
@@ -73,7 +74,9 @@ int Client_command::ExecuteCommand()
 
     case START_SIGNAL:
         if (isStart == false)
+        {
             isStart = true;
+        }
         break;
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
