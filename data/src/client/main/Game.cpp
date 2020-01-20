@@ -344,19 +344,18 @@ void Game::UpdateGame()
 				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
 				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
 			}
-		mCountTimer += deltaTime;
-		if (mCountTimer > mIntervalTime)
-		{
-			Client_command::isRepulsion = false;
-			Client_command::Collisioned_oppnent = -1;
-			mCountTimer = 0;
-			Sound::Collision_Sound();
+			pos.x = mCommand->PlayerPos[clientID].x;
+			pos.y = mCommand->PlayerPos[clientID].y;
+			mPlayer->SetPosition(pos);
 
-			if (Client_command::isCollision == true)
+			mCountTimer += deltaTime;
+			if (mCountTimer > mIntervalTime)
 			{
 				Client_command::isRepulsion = false;
 				Client_command::Collisioned_oppnent = -1;
 				mCountTimer = 0;
+				Sound::Collision_Sound();
+
 				if (Client_command::isCollision == true)
 				{
 					mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
@@ -390,44 +389,43 @@ void Game::UpdateGame()
 
 			mCommand->isCollision = false;
 			Client_command::isRepulsion = true;
+			if (mCommand->isStart == true)
+				mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+			if (mCommand->isGoal[clientID] == true)
+			{
+				mPlayer->SetPlayerState(Player::PlayerState::EGoal);
+				mCommand->isStart = false;
+			}
+
+			pos.x = mCommand->PlayerPos[clientID].x;
+			pos.y = mCommand->PlayerPos[clientID].y;
+			mPlayer->SetPosition(pos);
+			mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
+
+			mCommand->isCollision = false;
+			Client_command::isRepulsion = true;
 		}
 		if (mCommand->isStart == true)
+		{
 			mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+
+			if (Start_BGM == false)
+			{
+				class Sound *sound = new Sound(this);
+				sound->BackGroundMusic();
+				Start_BGM = true;
+			}
+		}
 		if (mCommand->isGoal[clientID] == true)
 		{
 			mPlayer->SetPlayerState(Player::PlayerState::EGoal);
 			mCommand->isStart = false;
 		}
 
-		pos.x = mCommand->PlayerPos[clientID].x;
-		pos.y = mCommand->PlayerPos[clientID].y;
-		mPlayer->SetPosition(pos);
-		mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
-
-		mCommand->isCollision = false;
-		Client_command::isRepulsion = true;
-	}
-	if (mCommand->isStart == true)
-	{
-		mPlayer->SetPlayerState(Player::PlayerState::ERunning);
-
-		if (Start_BGM == false)
-		{
-			class Sound *sound = new Sound(this);
-			sound->BackGroundMusic();
-			Start_BGM = true;
-		}
-	}
-	if (mCommand->isGoal[clientID] == true)
-	{
-		mPlayer->SetPlayerState(Player::PlayerState::EGoal);
-		mCommand->isStart = false;
-	}
-
-	// Add any dead actors to a temp vector
-	std::vector<Actor *>
-		deadActors;
-	for (auto actor : mActors)
+		// Add any dead actors to a temp vector
+		std::vector<Actor *>
+			deadActors;
+		for (auto actor : mActors)
 		{
 			if (actor->GetState() == Actor::EDead)
 			{
