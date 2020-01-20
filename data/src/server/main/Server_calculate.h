@@ -20,6 +20,7 @@ public:
 
   static bool Warnig_mode;
   static float Before_degree[MAX_CLIENTS];
+  static float Backup_degree[MAX_CLIENTS];
   static float CollisionStrage[MAX_CLIENTS];
 
   static float v2;

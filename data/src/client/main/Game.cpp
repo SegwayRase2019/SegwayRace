@@ -5,6 +5,7 @@
 #include "../actor/Stage.h"
 #include "../ui/Button.h"
 #include "../ui/HUD.h"
+#include "../ui/Resultwindow.h"
 #include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
 #include <SDL2/SDL.h>
@@ -353,6 +354,7 @@ void Game::UpdateGame()
 			Client_command::Collisioned_oppnent = -1;
 			mCountTimer = 0;
 			Sound::Collision_Sound();
+
 			if (Client_command::isCollision == true)
 			{
 				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;

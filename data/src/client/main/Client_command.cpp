@@ -24,12 +24,11 @@ Client_command::Client_command(Game *game)
 {
     isCollision = false;
     isStart = false;
-    for (int i = 0; i < MAX_CLIENTS; i++)
-        isGoal[i] = false;
 }
 
 int Client_command::ExecuteCommand()
 {
+
     int endFlag = 1;
 
     memset(&Posdata, 0, sizeof(CONTAINER));
@@ -81,7 +80,6 @@ int Client_command::ExecuteCommand()
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
             isGoal[Posdata.Client_id] = true;
-        break;
     }
 
     return endFlag;
@@ -108,6 +106,7 @@ void Client_command::SendPosCommand(void)
 
 void Client_command::SendEndCommand(void)
 {
+
     memset(&Posdata, 0, sizeof(CONTAINER));
 
     Posdata.Command = END_COMMAND;

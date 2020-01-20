@@ -54,6 +54,9 @@ public:
   Server_command(class Server_net *net);
   static int ExecuteCommand(int pos);
   int strage = 0;
+  static bool Goal_Status[MAX_CLIENTS];
+  static int Result_Rank[MAX_CLIENTS];
+  static int final_rank;
   static CONTAINER Posdata;
 
 private:
