@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-float Calculate::Player_angle[MAX_CLIENTS];
+float Calculate::Player_angle[MAX_CLIENTS] = {-99999, -99999, -99999, -99999};
 float Calculate::Player_angle_copy[MAX_CLIENTS];
 float Calculate::Player_laps[MAX_CLIENTS] = {0, 0, 0, 0};
 bool Calculate::Warnig_mode = false;
@@ -15,6 +15,7 @@ float Calculate::v2 = 0; //衝突された方の速度
 float Calculate::SpeedStorage[MAX_CLIENTS];
 float Calculate::m2;
 float Calculate::Backup_degree[MAX_CLIENTS];
+std::vector<float> Calculate::Angle;
 
 int Calculate::Player_restitution(CONTAINER Posdata)
 {
