@@ -10,14 +10,16 @@ class Sound
 private:
 public:
   Sound(class Game *game);
+  //Musicが関数名にMusicがつき、Chunkは関数名にSoundがついている
   static int Music_Countdown(int i);
   void Sound_Initialize();
   void BackGroundMusic();
-  void Goal_Music();
+  static void Goal_Music();
   static int Engine_Sound();
   static void Curve_Sound();
   static void Collision_Sound();
   static void UpdateMusicVolume();
+  static void ResultMusic();
 
   static bool engine_load;
   static bool curve_load;

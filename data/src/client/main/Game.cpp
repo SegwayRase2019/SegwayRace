@@ -92,6 +92,12 @@ bool Game::Initialize(int argc, char *argv[])
 
 	class Startwindow *startwindow = new Startwindow(this);
 
+	// class ItemBox *item = new ItemBox(this);
+	// Vector2 itemPos;
+	// itemPos.x = 1500;
+	// itemPos.y = 0;
+	// item->SetPosition(itemPos);
+
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
 

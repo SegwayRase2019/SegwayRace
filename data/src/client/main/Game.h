@@ -63,6 +63,7 @@ public:
 
   class Racer *mRacer[MAX_CLIENTS];
   class Player *mPlayer;
+  class ItemBox *mItem;
 
   //wiifitを定義
   static int Wiifit_Thread(void *data);
