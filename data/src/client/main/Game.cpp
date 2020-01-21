@@ -5,6 +5,8 @@
 #include "../actor/Stage.h"
 #include "../ui/Button.h"
 #include "../ui/HUD.h"
+#include "../ui/Start_window.h"
+#include "../ui/Wait_window.h"
 #include "../ui/Resultwindow.h"
 #include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
@@ -17,7 +19,7 @@
 #include "Music.h"
 
 Game::Game()
-	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0), mGameState(ERunning)
+	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0), mGameState(EStartwindow)
 {
 }
 
@@ -88,17 +90,7 @@ bool Game::Initialize(int argc, char *argv[])
 
 	mTicksCount = SDL_GetTicks();
 
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		mRacer[i] = new Racer(this, i);
-	}
-	mPlayer = new Player(this, clientID);
-
-	class Stage *stage = new Stage(this);
-
-	mHUD = new HUD(this);
-
-	stage->SetStatrtPosition();
+	class Startwindow *startwindow = new Startwindow(this);
 
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
@@ -271,6 +263,18 @@ void Game::ProcessInput()
 			default:
 				break;
 			}
+			if (!event.key.repeat)
+			{
+				if (!mUIStack.empty())
+					mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (!mUIStack.empty())
+			{
+				mUIStack.back()->HandleKeyPress(event.button.button);
+			}
+			break;
 		}
 	}
 
@@ -462,6 +466,17 @@ void Game::UpdateGame()
 		}
 	}
 
+	if (mGameState == EWaitPlayer)
+	{
+		//mGameState = ELoadStage;
+	}
+
+	if (mGameState == ELoadStage)
+	{
+		StartInitialize();
+		mGameState = ERunning;
+	}
+
 	if (mCommand->isFinish == true && mGameState == ERunning)
 	{
 		class Resultwindow *result = new Resultwindow(this);
@@ -522,6 +537,21 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	LoadText("assets/texts/English.gptext");
+}
+
+void Game::StartInitialize()
+{
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		mRacer[i] = new Racer(this, i);
+	}
+	mPlayer = new Player(this, clientID);
+
+	class Stage *stage = new Stage(this);
+
+	mHUD = new HUD(this);
+
+	stage->SetStatrtPosition();
 }
 
 void Game::UnloadData()
