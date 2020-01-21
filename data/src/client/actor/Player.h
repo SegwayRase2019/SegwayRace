@@ -23,16 +23,14 @@ public:
   void SetPosition(Vector2 pos) { Actor::SetPosition(pos); }
   float GetRotation() const { return Actor::GetRotation(); }
   void SetRotation(float rot) { Actor::SetRotation(rot); }
+  const PlayerState &GetPlayerState() const { return mPlState; }
   void SetPlayerState(PlayerState state) { mPlState = state; }
 
   void ComputeRocalTransform();
 
-  struct status{
-    float weight;
-    float addforce;
-    bool inversion = false;
-
-  }Status;
+  float weight;
+  float addforce = 300.0f;
+  bool inversion = false;
 
 private:
   class Game *mGame;

@@ -15,7 +15,6 @@
 
 Game::Game()
 	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0)
-
 {
 }
 
@@ -89,6 +88,12 @@ bool Game::Initialize(int argc, char *argv[])
 		mRacer[i] = new Racer(this, i);
 	}
 	mPlayer = new Player(this, clientID);
+
+	class ItemBox *item = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	item->SetPosition(itemPos);
 
 	class Stage *stage = new Stage(this);
 
@@ -298,7 +303,7 @@ void Game::UpdateGame()
 		mRacer[i]->SetRotation(rot);
 	}
 
-	if (Client_command::isRepulsion == true)
+	if (Client_command::isRepulsion == true && mPlayer->GetPlayerState() == Player::PlayerState::ERunning)
 	{
 		Vector2 pos;
 
@@ -323,7 +328,6 @@ void Game::UpdateGame()
 			Client_command::isRepulsion = false;
 			Client_command::Collisioned_oppnent = -1;
 			mCountTimer = 0;
-			printf("下がる\n");
 			if (Client_command::isCollision == true)
 			{
 				mCommand->PlayerPos[clientID].x = Client_command::PlayerPosCopy[clientID].x;
@@ -358,8 +362,13 @@ void Game::UpdateGame()
 		mCommand->isCollision = false;
 		Client_command::isRepulsion = true;
 	}
-	if(mCommand->isStart == true)
+	if (mCommand->isStart == true)
 		mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+	if (mCommand->isGoal[clientID] == true)
+	{
+		mPlayer->SetPlayerState(Player::PlayerState::EGoal);
+		mCommand->isStart = false;
+	}
 
 	// Add any dead actors to a temp vector
 	std::vector<Actor *>

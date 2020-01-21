@@ -4,7 +4,7 @@
 #include "../component/ItemComponent.h"
 #include "../component/SpriteComponent.h"
 #include "./Player.h"
-#include "../../server/main/Collision.h"
+#include "../main/Client_func.h"
 
 ItemBox::ItemBox(Game *game)
     : Actor(game), mIntervalTime(5), mCountTime(0)
@@ -18,12 +18,14 @@ ItemBox::ItemBox(Game *game)
 
 void ItemBox::UpdateActor(float deltaTime)
 {
-    //bool collision = coll->Collision_item(mGame->mPlayer->GetPosition(),GetPosition());
 
-    // if (SDL_SCANCODE_I)
-    // {
-    //     Actor::SetState(EInactive);
-    // }
+    if (Client_command::item_collision == true)
+    {
+        printf("ok\n");
+        Actor::SetState(EInactive);
+        Client_command::item_collision = false;
+        Player::addforce *= 2;
+    }
     if (Actor::GetState() == EInactive)
     {
         mCountTime += deltaTime;

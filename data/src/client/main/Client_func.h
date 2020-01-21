@@ -17,8 +17,10 @@ public:
   void SendEndCommand(void);
   void SendPosCommand(void);
   void SendStartSignal(void);
-  
+  void SendPosCommand_i(void);
+
   static bool isStart;
+  static bool isGoal[MAX_CLIENTS];
   static float Back_speed;
   static int Collisioned_oppnent;
   static bool Oppnent;
@@ -26,6 +28,7 @@ public:
   static bool isRepulsion;
   static bool isCollision;
   static CONTAINER CollisionPos[MAX_CLIENTS];
+  static bool item_collision;
 
 private:
   class Game *mGame;

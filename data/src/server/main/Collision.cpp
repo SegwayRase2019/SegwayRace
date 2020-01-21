@@ -9,13 +9,12 @@ float Collision::Player_Speed[MAX_CLIENTS];
 int Collision::Collisioned_opponent[MAX_CLIENTS];
 Vector2 Collision::Collision_Vector[MAX_CLIENTS];
 Vector2 Collision::Item_coordinate;
-bool Collision::Item_effect = false;
 
 int Collision::Collision_Judgement(CONTAINER Posdata)
 {
     Player_Collision(Posdata); //プレイヤーの衝突判定をする
-    //Collision_item(Posdata);//アイテムの衝突判定をする
-    Stage_Collision(Posdata); //ステージの当たり判定を計算する
+    Collision_item(Posdata);   //アイテムの衝突判定をする
+    Stage_Collision(Posdata);  //ステージの当たり判定を計算する
 
     //衝突判定があったどうかを確認する
     if (Player_Collision_Strage[Posdata.Client_id] == 1)
@@ -68,14 +67,17 @@ int Collision::Player_Collision(CONTAINER Posdata)
 
     if (collision == true)
     {
-        printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
-        Server_command::Posdata.Command = PLAYER_COLLISION;
-        Calculate::v2 = PlayerPos[collision_oppnent].speed;
-        Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
-        Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
-        Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
-        Calculate::m2 = PlayerPos[collision_oppnent].weight; //衝突された方の質量
-        Calculate::Player_restitution(Posdata);
+        if (Server_command::Goal_Status[collision_oppnent] != true)
+        {
+            printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
+            Server_command::Posdata.Command = PLAYER_COLLISION;
+            Calculate::v2 = PlayerPos[collision_oppnent].speed;
+            Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
+            Collision_Vector[collision_oppnent].x = PlayerPos[Posdata.Client_id].x - Posdata.x;
+            Collision_Vector[collision_oppnent].y = PlayerPos[Posdata.Client_id].y - Posdata.y;
+            Calculate::m2 = PlayerPos[collision_oppnent].weight; //衝突された方の質量
+            Calculate::Player_restitution(Posdata);
+        }
     }
     collision = false;
 }
@@ -148,20 +150,26 @@ int Collision::Stage_Collision(CONTAINER Posdata)
 
 int Collision::Collision_item(CONTAINER Posdata)
 {
-    //アイテムの座標を入れる
-    Item_coordinate.x = 0;
-    Item_coordinate.y = 0;
-    Item_effect = false;
 
-    float radious = 70;//半径
+    //アイテムの座標を入れる
+    // Item_coordinate.x = Server_command::Idata.x;
+    // Item_coordinate.y = Server_command::Idata.y;
+    Item_coordinate.x = 1500;
+    Item_coordinate.y = 0;
+    Posdata.Item_effect = false;
+
+    float radious = 70; //半径
 
     float a = std::abs(Posdata.x - Item_coordinate.x);
     float b = std::abs(Posdata.y - Item_coordinate.y);
 
     float Item_distance = std::sqrt((a * a) + (b * b));
 
-    if(Item_distance<radious)
+    if (Item_distance < radious)
     {
-        Item_effect = true;
+        Server_command::Posdata.Item_effect = true;
+        //Idata.Exist = false;
+        printf("itemcollision\n");
+        Server_command::Posdata.Command = ITEM_COLLISION;
     }
 }

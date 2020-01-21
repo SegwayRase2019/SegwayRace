@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 	Server_net *net;
 
 	net = new Server_net();
+	net = new Server_net();
 
 	int num;
 	bool endFlag = true;

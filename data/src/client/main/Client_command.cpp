@@ -3,11 +3,14 @@
 #include "../actor/Player.h"
 #include "../component/MoveComponent.h"
 #include "../ui/HUD.h"
+#include "../actor/ItemBox.h"
+#include "../actor/Actor.h"
 
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
 bool Client_command::isStart;
+bool Client_command::isGoal[MAX_CLIENTS];
 CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
 CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
 Vector2 Client_command::CollisionVector[MAX_CLIENTS];
@@ -16,6 +19,8 @@ float Client_command::Back_speed = 0.0f;
 int Client_command::Collisioned_oppnent = -1;
 float Client_command::Player_weight[MAX_CLIENTS];
 bool Client_command::Oppnent = false;
+bool Client_command::item_collision = false;
+//ITEM Idata;
 
 Client_command::Client_command(Game *game)
     : mGame(game)
@@ -33,20 +38,13 @@ int Client_command::ExecuteCommand()
 
     Client_net::RecvData(&Posdata, sizeof(Posdata));
 
-    if (Posdata.Client_id == Game::clientID)
-    {
-        // printf("Rank = %d\n", Posdata.rank);
-    }
-
     switch (Posdata.Command)
     {
     case END_COMMAND:
         endFlag = 0;
-        //printf("%c\n", Posdata.Command);
         break;
 
     case PLAYER_UP_COMMAND:
-        //printf("id=%d,x=%f,y=%f,rot=%f\n", Posdata.Client_id, Posdata.x, Posdata.y, Posdata.rot);
         PlayerPos[Posdata.Client_id].x = Posdata.x;
         PlayerPos[Posdata.Client_id].y = Posdata.y;
         PlayerPos[Posdata.Client_id].rot = Posdata.rot;
@@ -60,18 +58,14 @@ int Client_command::ExecuteCommand()
     case PLAYER_COLLISION:
         isCollision = true;
         Back_speed = std::abs(Posdata.speed);
-        printf("backspeed=%lf\n", Back_speed);
-
         CollisionPos[Posdata.Client_id].x = Posdata.x;
         CollisionPos[Posdata.Client_id].y = Posdata.y;
-
         break;
 
     case COLLISIONED:
         Collisioned_oppnent = Posdata.Client_id;
         CollisionVector[Game::clientID].x = Posdata.x;
         CollisionVector[Game::clientID].y = Posdata.y;
-        printf("x=%lf,y=%lf\n", CollisionVector[Game::clientID].x, CollisionVector[Game::clientID].y);
         break;
 
     case PLAYER_RANKING:
@@ -83,8 +77,13 @@ int Client_command::ExecuteCommand()
             isStart = true;
         break;
 
-    case Item_COLLISION:
+    case ITEM_COLLISION:
+        item_collision = Posdata.Item_effect;
         break;
+
+    case GOAL_SIGNAL:
+        if (isGoal[Posdata.Client_id] == false)
+            isGoal[Posdata.Client_id] = true;
     }
 
     return endFlag;
@@ -104,18 +103,40 @@ void Client_command::SendPosCommand(void)
     Posdata.Client_id = Game::clientID;
     Posdata.speed = MoveComponent::mForwardSpeed;
     Posdata.weight = Player_weight[Game::clientID];
+    Posdata.Item_effect = item_collision;
 
     /*データの送信*/
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));
 }
 
+// void Client_command::SendPosCommand_i(void)
+// {
+//     Vector2 pos = mGame->mItem->GetPosition();
+
+//     memset(&Idata, 0, sizeof(ITEM));
+
+//     //計算するところ
+//     Idata.x = pos.x;
+//     Idata.y = pos.y;
+//     //Idata.rot = mGame->mPlayer->GetRotation();
+//     Idata.Command = ITEM_COMMAND;
+//     //Idata.num = Game::clientID;
+//     switch (mGame->mItem->GetState())
+//     {
+//     case Actor::EInactive:
+//         Idata.Exist = false;
+//         break;
+//     case Actor::EActive:
+//         Idata.Exist = true;
+//         break;
+//     }
+
+//     /*データの送信*/
+//     mClient_net->SendData(&Idata, sizeof(ITEM));
+// }
+
 void Client_command::SendEndCommand(void)
 {
-
-#ifndef NDEBUG
-    printf("#####\n");
-    printf("SendEndCommand()\n");
-#endif
 
     memset(&Posdata, 0, sizeof(CONTAINER));
 

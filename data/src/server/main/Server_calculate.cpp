@@ -9,11 +9,12 @@ float Calculate::Player_angle[MAX_CLIENTS];
 float Calculate::Player_angle_copy[MAX_CLIENTS];
 float Calculate::Player_laps[MAX_CLIENTS] = {0, 0, 0, 0};
 bool Calculate::Warnig_mode = false;
-float Calculate::Before_degree[MAX_CLIENTS];
+float Calculate::Before_degree[MAX_CLIENTS] = {0, 0, 0, 0};
 float Calculate::CollisionStrage[MAX_CLIENTS] = {0, 0, 0, 0};
 float Calculate::v2 = 0; //衝突された方の速度
 float Calculate::SpeedStorage[MAX_CLIENTS];
 float Calculate::m2;
+float Calculate::Backup_degree[MAX_CLIENTS];
 
 int Calculate::Player_restitution(CONTAINER Posdata)
 {
@@ -30,21 +31,45 @@ int Calculate::Player_restitution(CONTAINER Posdata)
     SpeedStorage[Collision::collision_oppnent] = mv2;
 
     Collision::Player_Collision_Strage[Collision::collision_oppnent] = 1;
-    printf("m1 = %lf,m2 = %lf\n", m1, m2);
 }
 
 int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
 {
+    int Client_number = Server_net::gClientNum - 1;
+    if (Server_net::gClientNum == 1)
+    {
+        Client_number = 1;
+    }
 
     Calculate_angle();
     std::sort(Player_angle, Player_angle + SIZE_OF_ANGLE(Player_angle), std::greater<float>()); //降順にソート
     for (int j = 0; j < Server_net::gClientNum; j++)
     {
-
         if (Player_angle_copy[Posdata.Client_id] == Player_angle[j])
         {
             Server_command::Posdata.rank = j + 1;
-            break;
+
+            if ((Backup_degree[Posdata.Client_id] < 90 && Player_angle_copy[Posdata.Client_id] >= 90) && Server_command::Goal_Status[Posdata.Client_id] != true)
+            {
+                Server_command::Posdata.Command = GOAL_SIGNAL;
+                Server_command::Goal_Status[Posdata.Client_id] = true;
+                Server_command::Result_Rank[Server_command::final_rank] = Server_command::Posdata.Client_id;
+                Server_command::final_rank++;
+                break;
+            }
+
+            if (Server_command::Goal_Status[Posdata.Client_id] == true)
+            {
+                Server_command::Posdata.Command = GOAL_SIGNAL;
+                Server_command::Posdata.rank = Server_command::Result_Rank[Posdata.Client_id];
+                if (Server_command::final_rank >= Client_number)
+                {
+                    Server_command::Posdata.Command = FINISH_COMMAND;
+                }
+                break;
+            }
+
+            Backup_degree[Posdata.Client_id] = Player_angle_copy[Posdata.Client_id];
         }
     }
 }
@@ -59,6 +84,7 @@ int Calculate::Calculate_angle()
 
     for (int i = 0; i < Server_net::gClientNum; i++)
     {
+
         float radian = std::atan2(Stage_middle.y - Collision::PlayerPos[i].y, Collision::PlayerPos[i].x - Stage_middle.x);
         float degree = radian * 180 / 3.14;
 

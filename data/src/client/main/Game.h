@@ -50,6 +50,7 @@ public:
 
   class Racer *mRacer[MAX_CLIENTS];
   class Player *mPlayer;
+  class ItemBox *mItem;
 
   //wiifitを定義
   static int Wiifit_Thread(void *data);
@@ -58,7 +59,6 @@ public:
   struct balance_cal balance_cal;
   static char command; //転送するコマンド
   bool wiifit_connect = true;
-
 
 private:
   class Client_net *mNet;
@@ -70,7 +70,6 @@ private:
   SDL_Thread *thr;
   //wiifit thread
   SDL_Thread *wii_fit_thr;
-
 
   // Helper functions for the game loop
   void ProcessInput();

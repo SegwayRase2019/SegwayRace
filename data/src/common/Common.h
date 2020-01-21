@@ -33,7 +33,8 @@
 #define PLAYER_RANKING 'R' /*プレイヤのランキング*/
 #define START_SIGNAL 'S'   /*レースがスタートした事を通知*/
 #define GOAL_SIGNAL 'G'    /*プレイヤがゴールした事を通知*/
-#define Item_COLLISION 'I'
+#define ITEM_COLLISION 'I'
+#define FINISH_COMMAND 'F' /*プレイヤが全員ゴールしたことを通知*/
 
 typedef struct
 {
@@ -45,6 +46,7 @@ typedef struct
     int rank;
     float speed;
     float weight = 50;
+    bool Item_effect = false;
 } CONTAINER;
 
 typedef struct
@@ -57,3 +59,12 @@ typedef struct
     float bal_y;
     float weight;
 } Prs;
+
+// typedef struct
+// {
+//     float x = 0;
+//     float y = 0;
+//     int num;
+//     char Command;
+//     bool Exist;
+// } ITEM;

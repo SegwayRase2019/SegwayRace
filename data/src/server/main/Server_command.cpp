@@ -13,6 +13,10 @@ Server_command::Server_command(Server_net *net)
 }
 
 CONTAINER Server_command::Posdata;
+bool Server_command::Goal_Status[MAX_CLIENTS];
+int Server_command::Result_Rank[MAX_CLIENTS];
+int Server_command::final_rank = 0;
+//ITEM Server_command::Idata;
 
 int Server_command::ExecuteCommand(int pos)
 {
@@ -23,12 +27,12 @@ int Server_command::ExecuteCommand(int pos)
 	memset(&Posdata, 0, sizeof(CONTAINER));
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
+	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
 	if (Posdata.Command != END_COMMAND)
 	{
-		Collision::Collision_Judgement(Posdata); //当たり判定
-
 		Calculate::Stage_rank(Posdata);
+		Collision::Collision_Judgement(Posdata); //当たり判定
 	}
 
 	switch (Posdata.Command)
@@ -36,7 +40,6 @@ int Server_command::ExecuteCommand(int pos)
 	case END_COMMAND:
 	{
 		dataSize = 0;
-		printf("command=%c\n", Posdata.Command);
 
 		/* 全ユーザーに送る */
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
@@ -61,13 +64,31 @@ int Server_command::ExecuteCommand(int pos)
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
+	case ITEM_COLLISION:
+	{
+		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
+		//Server_net::SendData(ALL_CLIENTS, &Idata, sizeof(ITEM));
+		break;
+	}
 	case START_SIGNAL:
 	{
 		dataSize = 0;
-		printf("command=%c\n", Posdata.Command);
 
 		/* 全ユーザーに送る */
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+
+		break;
+	}
+	case GOAL_SIGNAL:
+	{
+		dataSize = 0;
+
+		/* 全ユーザーに送る */
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+		break;
+	}
+	case FINISH_COMMAND:
+	{
 
 		break;
 	}
