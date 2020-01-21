@@ -3,6 +3,8 @@
 #include "../actor/Player.h"
 #include "../component/MoveComponent.h"
 #include "../ui/HUD.h"
+#include "../actor/ItemBox.h"
+#include "../actor/Actor.h"
 #include "Music.h"
 
 CONTAINER Posdata;
@@ -19,6 +21,8 @@ float Client_command::Back_speed = 0.0f;
 int Client_command::Collisioned_oppnent = -1;
 float Client_command::Player_weight[MAX_CLIENTS];
 bool Client_command::Oppnent = false;
+bool Client_command::item_collision = false;
+//ITEM Idata;
 
 Client_command::Client_command(Game *game)
     : mGame(game)
@@ -59,10 +63,8 @@ int Client_command::ExecuteCommand()
     case PLAYER_COLLISION:
         isCollision = true;
         Back_speed = std::abs(Posdata.speed);
-
         CollisionPos[Posdata.Client_id].x = Posdata.x;
         CollisionPos[Posdata.Client_id].y = Posdata.y;
-
         break;
 
     case COLLISIONED:
@@ -81,6 +83,11 @@ int Client_command::ExecuteCommand()
             isStart = true;
         }
         break;
+
+    case ITEM_COLLISION:
+        item_collision = Posdata.Item_effect;
+        break;
+
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
         {
@@ -118,10 +125,37 @@ void Client_command::SendPosCommand(void)
     Posdata.Client_id = Game::clientID;
     Posdata.speed = MoveComponent::mForwardSpeed;
     Posdata.weight = Player_weight[Game::clientID];
+    Posdata.Item_effect = item_collision;
 
     /*データの送信*/
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));
 }
+
+// void Client_command::SendPosCommand_i(void)
+// {
+//     Vector2 pos = mGame->mItem->GetPosition();
+
+//     memset(&Idata, 0, sizeof(ITEM));
+
+//     //計算するところ
+//     Idata.x = pos.x;
+//     Idata.y = pos.y;
+//     //Idata.rot = mGame->mPlayer->GetRotation();
+//     Idata.Command = ITEM_COMMAND;
+//     //Idata.num = Game::clientID;
+//     switch (mGame->mItem->GetState())
+//     {
+//     case Actor::EInactive:
+//         Idata.Exist = false;
+//         break;
+//     case Actor::EActive:
+//         Idata.Exist = true;
+//         break;
+//     }
+
+//     /*データの送信*/
+//     mClient_net->SendData(&Idata, sizeof(ITEM));
+// }
 
 void Client_command::SendEndCommand(void)
 {

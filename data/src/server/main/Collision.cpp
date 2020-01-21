@@ -9,13 +9,12 @@ float Collision::Player_Speed[MAX_CLIENTS];
 int Collision::Collisioned_opponent[MAX_CLIENTS];
 Vector2 Collision::Collision_Vector[MAX_CLIENTS];
 Vector2 Collision::Item_coordinate;
-bool Collision::Item_effect = false;
 
 int Collision::Collision_Judgement(CONTAINER Posdata)
 {
     Player_Collision(Posdata); //プレイヤーの衝突判定をする
-    //Collision_item(Posdata);//アイテムの衝突判定をする
-    Stage_Collision(Posdata); //ステージの当たり判定を計算する
+    Collision_item(Posdata);   //アイテムの衝突判定をする
+    Stage_Collision(Posdata);  //ステージの当たり判定を計算する
 
     //衝突判定があったどうかを確認する
     if (Player_Collision_Strage[Posdata.Client_id] == 1)
@@ -150,10 +149,13 @@ int Collision::Stage_Collision(CONTAINER Posdata)
 
 int Collision::Collision_item(CONTAINER Posdata)
 {
+
     //アイテムの座標を入れる
-    Item_coordinate.x = 0;
+    // Item_coordinate.x = Server_command::Idata.x;
+    // Item_coordinate.y = Server_command::Idata.y;
+    Item_coordinate.x = 1500;
     Item_coordinate.y = 0;
-    Item_effect = false;
+    Posdata.Item_effect = false;
 
     float radious = 70; //半径
 
@@ -164,6 +166,9 @@ int Collision::Collision_item(CONTAINER Posdata)
 
     if (Item_distance < radious)
     {
-        Item_effect = true;
+        Server_command::Posdata.Item_effect = true;
+        //Idata.Exist = false;
+        printf("itemcollision\n");
+        Server_command::Posdata.Command = ITEM_COLLISION;
     }
 }

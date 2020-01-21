@@ -16,6 +16,8 @@ CONTAINER Server_command::Posdata;
 bool Server_command::Goal_Status[MAX_CLIENTS];
 int Server_command::Result_Rank[MAX_CLIENTS];
 int Server_command::final_rank = 0;
+//ITEM Server_command::Idata;
+
 bool Server_command::debug[MAX_CLIENTS];
 
 int Server_command::ExecuteCommand(int pos)
@@ -26,6 +28,7 @@ int Server_command::ExecuteCommand(int pos)
 
 	memset(&Posdata, 0, sizeof(CONTAINER));
 
+	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
 	if (Posdata.Command != END_COMMAND)
@@ -61,6 +64,12 @@ int Server_command::ExecuteCommand(int pos)
 		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
 		Posdata.Command = PLAYER_RANKING;
 		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+		break;
+	}
+	case ITEM_COLLISION:
+	{
+		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
+		//Server_net::SendData(ALL_CLIENTS, &Idata, sizeof(ITEM));
 		break;
 	}
 	case START_SIGNAL:

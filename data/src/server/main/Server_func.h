@@ -58,6 +58,8 @@ public:
   static int Result_Rank[MAX_CLIENTS];
   static int final_rank;
   static CONTAINER Posdata;
+  //static ITEM Idata;
+
   static bool debug[MAX_CLIENTS];
 
 private:

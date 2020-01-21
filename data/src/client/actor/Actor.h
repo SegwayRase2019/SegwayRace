@@ -52,7 +52,7 @@ protected:
   State mState;
 
 private:
-    Matrix3 mWorldTransform;
+  Matrix3 mWorldTransform;
   Vector2 mPosition;
   float mScale;
   float mRotation;

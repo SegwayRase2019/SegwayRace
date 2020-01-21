@@ -94,6 +94,12 @@ bool Game::Initialize(int argc, char *argv[])
 	}
 	mPlayer = new Player(this, clientID);
 
+	class ItemBox *item = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	item->SetPosition(itemPos);
+
 	class Stage *stage = new Stage(this);
 
 	mHUD = new HUD(this);
