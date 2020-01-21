@@ -16,6 +16,7 @@ CONTAINER Server_command::Posdata;
 bool Server_command::Goal_Status[MAX_CLIENTS];
 int Server_command::Result_Rank[MAX_CLIENTS];
 int Server_command::final_rank = 0;
+bool Server_command::debug[MAX_CLIENTS];
 
 int Server_command::ExecuteCommand(int pos)
 {

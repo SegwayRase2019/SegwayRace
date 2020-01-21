@@ -70,7 +70,6 @@ int Collision::Player_Collision(CONTAINER Posdata)
     {
         if (Server_command::Goal_Status[collision_oppnent] != true)
         {
-            printf("ID%dがID%dに衝突\n", Posdata.Client_id, collision_oppnent);
             Server_command::Posdata.Command = PLAYER_COLLISION;
             Calculate::v2 = PlayerPos[collision_oppnent].speed;
             Collisioned_opponent[collision_oppnent] = Posdata.Client_id;
