@@ -126,4 +126,23 @@ void Sound::Collision_Sound()
 
 void Sound::Goal_Music()
 {
+    bgm = Mix_LoadMUS("assets/musics/sample.mp3");
+    if (bgm == NULL)
+    {
+        SDL_Log("Failed to load music file %s", SDL_GetError());
+    }
+
+    Mix_PlayMusic(bgm, -1);
+}
+
+void Sound::ResultMusic()
+{
+    bgm = Mix_LoadMUS("assets/musics/sample.mp3");
+
+    if (bgm == NULL)
+    {
+        SDL_Log("Failed to load music file %s", SDL_GetError());
+    }
+
+    Mix_PlayMusic(bgm, -1);
 }
