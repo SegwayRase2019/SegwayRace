@@ -18,6 +18,8 @@ int Server_command::Result_Rank[MAX_CLIENTS];
 int Server_command::final_rank = 0;
 //ITEM Server_command::Idata;
 
+bool Server_command::debug[MAX_CLIENTS];
+
 int Server_command::ExecuteCommand(int pos)
 {
 	unsigned char data[MAX_DATA];
@@ -89,7 +91,7 @@ int Server_command::ExecuteCommand(int pos)
 	}
 	case FINISH_COMMAND:
 	{
-
+		Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
 	default:

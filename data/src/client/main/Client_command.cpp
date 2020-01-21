@@ -5,12 +5,14 @@
 #include "../ui/HUD.h"
 #include "../actor/ItemBox.h"
 #include "../actor/Actor.h"
+#include "Music.h"
 
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
 bool Client_command::isStart;
 bool Client_command::isGoal[MAX_CLIENTS];
+bool Client_command::isFinish = false;
 CONTAINER Client_command::PlayerPosCopy[MAX_CLIENTS];
 CONTAINER Client_command::CollisionPos[MAX_CLIENTS];
 Vector2 Client_command::CollisionVector[MAX_CLIENTS];
@@ -27,6 +29,9 @@ Client_command::Client_command(Game *game)
 {
     isCollision = false;
     isStart = false;
+    isFinish = false;
+    for (int i = 0; i < MAX_CLIENTS; i++)
+        isGoal[i] = false;
 }
 
 int Client_command::ExecuteCommand()
@@ -74,7 +79,9 @@ int Client_command::ExecuteCommand()
 
     case START_SIGNAL:
         if (isStart == false)
+        {
             isStart = true;
+        }
         break;
 
     case ITEM_COLLISION:
@@ -83,7 +90,22 @@ int Client_command::ExecuteCommand()
 
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
+        {
             isGoal[Posdata.Client_id] = true;
+            if (Posdata.Client_id == Game::clientID)
+            {
+                Sound::Goal_Music();
+            }
+        }
+        PlayerPos[Posdata.Client_id].rank = Posdata.rank;
+        break;
+    case FINISH_COMMAND:
+        if (isFinish == false)
+        {
+            isFinish = true;
+            Sound::ResultMusic();
+        }
+        break;
     }
 
     return endFlag;

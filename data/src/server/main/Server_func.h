@@ -60,6 +60,8 @@ public:
   static CONTAINER Posdata;
   //static ITEM Idata;
 
+  static bool debug[MAX_CLIENTS];
+
 private:
   class Server_net *mServer_net;
 };

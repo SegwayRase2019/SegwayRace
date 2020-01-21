@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include <cmath>
 #include <stdlib.h>
+#include <vector>
 
 class Calculate
 {
@@ -22,6 +23,8 @@ public:
   static float Before_degree[MAX_CLIENTS];
   static float Backup_degree[MAX_CLIENTS];
   static float CollisionStrage[MAX_CLIENTS];
+
+  static std::vector<float> Angle;
 
   static float v2;
   static float m2;

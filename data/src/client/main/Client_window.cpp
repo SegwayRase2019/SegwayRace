@@ -37,12 +37,12 @@ bool Client_window::InitWindows(int clientID, int num, char name[][MAX_NAME_SIZE
 	sprintf(title, "SegwayRace(ID:%d)", clientID);
 	/* メインのウインドウを作成する */
 	mWindow = SDL_CreateWindow(
-		title, // Window title
-		100,		  // Top left x-coordinate of window
-		100,		  // Top left y-coordinate of window
-		mWindowWidth,		  // Width of window
-		mWindowHeight,		  // Height of window
-		0			  // Flags (0 for no flags Set)
+		title,		   // Window title
+		100,		   // Top left x-coordinate of window
+		100,		   // Top left y-coordinate of window
+		mWindowWidth,  // Width of window
+		mWindowHeight, // Height of window
+		0			   // Flags (0 for no flags Set)
 	);
 	if (!mWindow)
 	{
@@ -172,7 +172,7 @@ void Client_window::Draw()
 	// Draw all sprite components
 	for (auto sprite : mSprites)
 	{
-		if(sprite->Component::GetOwner()->GetState()==Actor::EActive)
+		if (sprite->Component::GetOwner()->GetState() == Actor::EActive)
 			sprite->Draw(mRenderer);
 	}
 

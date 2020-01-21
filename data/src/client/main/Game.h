@@ -12,6 +12,11 @@
 class Game
 {
 public:
+  enum GameState
+  {
+    ERunning,
+    EFinished
+  };
   Game();
   // Initialize the game
   bool Initialize(int, char *[]);
@@ -46,7 +51,8 @@ public:
   class Client_window *GetClient_window(void) const { return mWindow; }
   class Client_command *GetClient_command(void) const { return mCommand; }
   class HUD *GetHUD(void) const { return mHUD; }
-  int GetEndFlag(void) { return mEndFlag; }
+  int GetClientNum(void) const { return mNum; }
+  int GetEndFlag(void) const { return mEndFlag; }
 
   class Racer *mRacer[MAX_CLIENTS];
   class Player *mPlayer;
@@ -59,6 +65,8 @@ public:
   struct balance_cal balance_cal;
   static char command; //転送するコマンド
   bool wiifit_connect = true;
+
+  static int volume;
 
 private:
   class Client_net *mNet;
@@ -110,6 +118,7 @@ private:
   float mIntervalTime;
   float mCountTimer;
 
-  // 以下は必要ない変数
+  GameState mGameState;
+
   int mNum;
 };

@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-float Calculate::Player_angle[MAX_CLIENTS];
+float Calculate::Player_angle[MAX_CLIENTS] = {-99999, -99999, -99999, -99999};
 float Calculate::Player_angle_copy[MAX_CLIENTS];
 float Calculate::Player_laps[MAX_CLIENTS] = {0, 0, 0, 0};
 bool Calculate::Warnig_mode = false;
@@ -15,6 +15,7 @@ float Calculate::v2 = 0; //衝突された方の速度
 float Calculate::SpeedStorage[MAX_CLIENTS];
 float Calculate::m2;
 float Calculate::Backup_degree[MAX_CLIENTS];
+std::vector<float> Calculate::Angle;
 
 int Calculate::Player_restitution(CONTAINER Posdata)
 {
@@ -49,16 +50,21 @@ int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
         {
             Server_command::Posdata.rank = j + 1;
 
-            if ((Backup_degree[Posdata.Client_id] < 90 && Player_angle_copy[Posdata.Client_id] >= 90) && Server_command::Goal_Status[Posdata.Client_id] != true)
+            if (Backup_degree[Server_command::Posdata.Client_id] < 90.0f && Player_angle_copy[Server_command::Posdata.Client_id] >= 90.0f)
             {
-                Server_command::Posdata.Command = GOAL_SIGNAL;
-                Server_command::Goal_Status[Posdata.Client_id] = true;
-                Server_command::Result_Rank[Server_command::final_rank] = Server_command::Posdata.Client_id;
-                Server_command::final_rank++;
-                break;
+                if (Backup_degree[Server_command::Posdata.Client_id] > 85.0f && Player_angle_copy[Server_command::Posdata.Client_id] < 95.0f)
+                {
+                    if (Server_command::Goal_Status[Server_command::Posdata.Client_id] != true)
+                    {
+                        Server_command::Posdata.Command = GOAL_SIGNAL;
+                        Server_command::Goal_Status[Server_command::Posdata.Client_id] = true;
+                        Server_command::Result_Rank[Server_command::Posdata.Client_id] = Server_command::final_rank + 1;
+                        Server_command::final_rank++;
+                    }
+                }
             }
 
-            if (Server_command::Goal_Status[Posdata.Client_id] == true)
+            if (Server_command::Goal_Status[Server_command::Posdata.Client_id] == true)
             {
                 Server_command::Posdata.Command = GOAL_SIGNAL;
                 Server_command::Posdata.rank = Server_command::Result_Rank[Posdata.Client_id];
@@ -66,10 +72,9 @@ int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
                 {
                     Server_command::Posdata.Command = FINISH_COMMAND;
                 }
-                break;
             }
 
-            Backup_degree[Posdata.Client_id] = Player_angle_copy[Posdata.Client_id];
+            Backup_degree[Server_command::Posdata.Client_id] = Player_angle_copy[Server_command::Posdata.Client_id];
         }
     }
 }

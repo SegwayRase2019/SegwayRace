@@ -30,6 +30,7 @@ public:
   UIState GetState() const { return mState; }
 
   void SetTitle(const std::string &title, const Vector3 &Color = Color::White, int pointSize = 40);
+  void SetTitlePos(const Vector2 pos) { mTitlePos = pos; }
 
   void AddButton(const std::string &name, std::function<void()> onClick);
 
@@ -52,6 +53,8 @@ protected:
 
   int mWindowWidth;
   int mWindowHeight;
+
+  int mClientNum;
 
   std::vector<Button *> mButtons;
 };
