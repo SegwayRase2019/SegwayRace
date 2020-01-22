@@ -24,7 +24,6 @@ void ItemBox::UpdateActor(float deltaTime)
         printf("ok\n");
         Actor::SetState(EInactive);
         Client_command::item_collision = false;
-        Player::addforce *= 2;
     }
     if (Actor::GetState() == EInactive)
     {

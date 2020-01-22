@@ -66,9 +66,10 @@ void Startwindow::Update(float deltaTime)
 
 void Startwindow::HandleKeyPress(int key)
 {
-    if (key == SDLK_RETURN)
+    if (mGame->GetGameState() == Game::EStartwindow && key == SDLK_RETURN)
     {
         mGame->SetGameState(Game::EWaitPlayer);
         class Waitwindow *ww = new Waitwindow(mGame);
+        mGame->GetClient_command()->SendWaitSignal();
     }
 }
