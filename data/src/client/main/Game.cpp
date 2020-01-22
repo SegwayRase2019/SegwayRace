@@ -328,7 +328,7 @@ void Game::UpdateGame()
 
 		mCommand->SendPosCommand();
 
-		for (int i = 0; i < MAX_CLIENTS; i++)
+		for (int i = 0; i < mNum; i++)
 		{
 			Vector2 pos;
 			float rot;
@@ -548,7 +548,7 @@ void Game::LoadData()
 
 void Game::StartInitialize()
 {
-	for (int i = 0; i < MAX_CLIENTS; i++)
+	for (int i = 0; i < mNum; i++)
 	{
 		mRacer[i] = new Racer(this, i);
 	}
