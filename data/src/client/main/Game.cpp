@@ -472,9 +472,10 @@ void Game::UpdateGame()
 		}
 	}
 
-	if (mGameState == EWaitPlayer)
+	if (mCommand->isPreparing == false && mGameState == EWaitPlayer)
 	{
-		//mGameState = ELoadStage;
+		mGameState = ELoadStage;
+		mCommand->isPreparing = true;
 	}
 
 	if (mGameState == ELoadStage)

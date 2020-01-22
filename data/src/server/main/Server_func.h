@@ -64,4 +64,5 @@ public:
 
 private:
   class Server_net *mServer_net;
+  static bool plWait[MAX_CLIENTS];
 };

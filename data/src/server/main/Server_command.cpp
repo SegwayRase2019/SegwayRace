@@ -10,12 +10,17 @@
 Server_command::Server_command(Server_net *net)
 	: mServer_net(net)
 {
+	for (int i = 0; i < MAX_CLIENTS; i++)
+	{
+		plWait[i] = false;
+	}
 }
 
 CONTAINER Server_command::Posdata;
 bool Server_command::Goal_Status[MAX_CLIENTS];
 int Server_command::Result_Rank[MAX_CLIENTS];
 int Server_command::final_rank = 0;
+bool Server_command::plWait[MAX_CLIENTS];
 //ITEM Server_command::Idata;
 
 bool Server_command::debug[MAX_CLIENTS];
@@ -29,9 +34,8 @@ int Server_command::ExecuteCommand(int pos)
 	memset(&Posdata, 0, sizeof(CONTAINER));
 
 	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
-	Server_net::RecvData(pos, &Posdata, sizeof(Posdata));
 
-	if (Posdata.Command != END_COMMAND)
+	if (Posdata.Command != END_COMMAND && Posdata.Command != WAIT_SIGNAL)
 	{
 		Calculate::Stage_rank(Posdata);
 		Collision::Collision_Judgement(Posdata); //当たり判定
@@ -70,6 +74,18 @@ int Server_command::ExecuteCommand(int pos)
 	{
 		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
 		//Server_net::SendData(ALL_CLIENTS, &Idata, sizeof(ITEM));
+		break;
+	}
+	case WAIT_SIGNAL:
+	{
+		plWait[Posdata.Client_id] = true;
+		for (int i = 0; i < Server_net::gClientNum; i++)
+		{
+			if (!plWait[i])
+				break;
+			if (i == (Server_net::gClientNum - 1))
+				Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
+		}
 		break;
 	}
 	case START_SIGNAL:
