@@ -95,7 +95,7 @@ void HUD::Draw(SDL_Renderer *renderer)
     uiPos.y += (((float)h2 * uiSize) / 2);
     float plUISize = uiSize / 2;
     Vector2 plUIPos = Vector2::Zero;
-    for (int i = 0; i < MAX_CLIENTS; i++)
+    for (int i = 0; i < mClientNum; i++)
     {
         plUIPos = uiPos;
         plUIPos.x += ((mPlPos[i].x / (10 / uiSize)) - (w * plUISize / 2)); // 10はステージのミニマップに対する画像倍率
@@ -125,7 +125,7 @@ void HUD::UpdateRanking()
 
 void HUD::PlayerPosUpdate()
 {
-    for (int i = 0; i < MAX_CLIENTS; i++)
+    for (int i = 0; i < mClientNum; i++)
     {
         mPlPos[i] = mGame->mRacer[i]->GetPosition();
     }

@@ -17,8 +17,8 @@ void Stage::SetStatrtPosition()
 {
     for (int k = 0; k < MAX_CLIENTS; k++)
     {
-        StartPosition[k].x = BASIC_POSITION_X + (POSITON_GAP * k);
-        StartPosition[k].y = BASIC_POSITION_Y - (POSITON_GAP * k);
+        StartPosition[k].x = BASIC_POSITION_X + (POSITION_GAP_X * k);
+        StartPosition[k].y = BASIC_POSITION_Y - (POSITION_GAP_Y * k);
     }
 
     for (int i = 0; i < MAX_CLIENTS; i++)
