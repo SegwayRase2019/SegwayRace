@@ -73,7 +73,7 @@ int Server_command::ExecuteCommand(int pos)
 	case ITEM_COLLISION:
 	{
 		Server_net::SendData(Posdata.Client_id, &Posdata, sizeof(CONTAINER));
-		//Server_net::SendData(ALL_CLIENTS, &Idata, sizeof(ITEM));
+		//Server_net::SendData(ALL_CLIENTS, &Posdata, sizeof(CONTAINER));
 		break;
 	}
 	case WAIT_SIGNAL:

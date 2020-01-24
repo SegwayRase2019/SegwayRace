@@ -3,14 +3,23 @@
 #include "../main/Game.h"
 #include "../../common/Common.h"
 #include "../../common/math/Math.h"
+#include "../actor/Player.h"
 
-InputComponent::InputComponent(class Actor *owner)
-	: MoveComponent(owner), mForwardKey(0), mBackKey(0), mClockwiseKey(0), mCounterClockwiseKey(0)
+InputComponent::InputComponent(class Actor *owner, class Player *player)
+	: MoveComponent(owner), mForwardKey(0), mBackKey(0), mClockwiseKey(0), mCounterClockwiseKey(0), mPlayer(player)
 {
 }
 
 void InputComponent::ProcessInput(const uint8_t *keyState)
 {
+	if (mPlayer->affected == true)
+	{
+		mMaxForwardSpeed = mPlayer->addforce * 2;
+	}
+	else if (mPlayer->affected == false)
+	{
+		mMaxForwardSpeed = mPlayer->addforce;
+	}
 
 	if (mOwner->Actor::GetGame()->wiifit_connect == false)
 	{

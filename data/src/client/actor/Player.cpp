@@ -7,7 +7,7 @@ Player::Player(Game *game, int clientID)
 {
 
 	// Create an input component and set keys/speed
-	InputComponent *ic = new InputComponent(this);
+	InputComponent *ic = new InputComponent(this, this);
 	ic->SetForwardKey(SDL_SCANCODE_W);
 	ic->SetBackKey(SDL_SCANCODE_S);
 	ic->SetClockwiseKey(SDL_SCANCODE_A);

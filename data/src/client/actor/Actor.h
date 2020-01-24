@@ -38,7 +38,7 @@ public:
 
   Vector2 GetForward() const { return Vector2(-Math::Sin(mRotation), -Math::Cos(mRotation)); }
 
-  State GetState() const { return mState; }
+  const State &GetState() const { return mState; }
   void SetState(State state) { mState = state; }
 
   class Game *GetGame() { return mGame; }
@@ -46,7 +46,7 @@ public:
   // コンポーネントの追加と削除
   void AddComponent(class Component *component);
   void RemoveComponent(class Component *component);
-    class Game *mGame;
+  class Game *mGame;
 
 protected:
   State mState;
@@ -59,5 +59,4 @@ private:
   bool mRecomputeTransform;
 
   std::vector<class Component *> mComponents;
-
 };

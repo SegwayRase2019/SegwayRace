@@ -31,6 +31,7 @@ public:
   float weight;
   float addforce = 300.0f;
   bool inversion = false;
+  bool affected = false;
 
 private:
   class Game *mGame;

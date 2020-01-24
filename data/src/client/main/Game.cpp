@@ -93,16 +93,19 @@ bool Game::Initialize(int argc, char *argv[])
 
 	mTicksCount = SDL_GetTicks();
 
+
 	class Startwindow *startwindow = new Startwindow(this);
 
-	// class ItemBox *item = new ItemBox(this);
-	// Vector2 itemPos;
-	// itemPos.x = 1500;
-	// itemPos.y = 0;
-	// item->SetPosition(itemPos);
 
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
+
+	mItem = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	mItem->SetPosition(itemPos);
+	mPlayer->SetPlayerState(Player::PlayerState::ERunning); // 後で消す
 
 	//ここからwiifitの初期化
 
