@@ -16,6 +16,14 @@ Startwindow::Startwindow(Game *game)
     mBackGround = mGame->GetClient_window()->GetTexture("assets/images/ResultBG.png");
     mText = mFont->RenderText("Your charactor", Color::White, 48);
     mPushText = mFont->RenderText("Please push \"Enter\"!", Color::White, 30);
+    if (Game::isWiifit == true)
+    {
+        mWiiText = mFont->RenderText("Connecting to WiiFit", Color::White, 30);
+    }
+    else
+    {
+        mWiiText = mFont->RenderText("Not connecting to WiiFit", Color::White, 30);
+    }
 
     switch (mGame->clientID)
     {
@@ -56,6 +64,10 @@ void Startwindow::Draw(SDL_Renderer *renderer)
     SDL_QueryTexture(mPushText, NULL, NULL, &w, &h);
     uiPos.x = mWindowHeight / 2 - (float)w * uiSize / 2;
     DrawTexture(renderer, mPushText, uiPos, uiSize);
+    SDL_QueryTexture(mWiiText, NULL, NULL, &w, &h);
+    uiPos.x = 0;
+    uiPos.y = mWindowHeight - (float)h * uiSize;
+    DrawTexture(renderer, mWiiText, uiPos, uiSize);
 }
 
 void Startwindow::Update(float deltaTime)
