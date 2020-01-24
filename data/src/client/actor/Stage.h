@@ -21,6 +21,7 @@ public:
 private:
 #define MAP_SCALE 10
 #define BASIC_POSITION_X 1000
-#define POSITON_GAP 200
+#define POSITION_GAP_X 200
+#define POSITION_GAP_Y 100
 #define BASIC_POSITION_Y 300
 };

@@ -31,6 +31,7 @@
 #define PLAYER_COLLISION 'P'  /*プレイヤーが衝突した判定*/
 #define COLLISIONED 'C'
 #define PLAYER_RANKING 'R' /*プレイヤのランキング*/
+#define WAIT_SIGNAL 'W'    /*プレイヤが待機している事を通知*/
 #define START_SIGNAL 'S'   /*レースがスタートした事を通知*/
 #define GOAL_SIGNAL 'G'    /*プレイヤがゴールした事を通知*/
 #define ITEM_COLLISION 'I'

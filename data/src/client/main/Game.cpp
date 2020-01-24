@@ -5,6 +5,8 @@
 #include "../actor/Stage.h"
 #include "../ui/Button.h"
 #include "../ui/HUD.h"
+#include "../ui/Start_window.h"
+#include "../ui/Wait_window.h"
 #include "../ui/Resultwindow.h"
 #include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
@@ -17,7 +19,7 @@
 #include "Music.h"
 
 Game::Game()
-	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0), mGameState(ERunning)
+	: mEndFlag(1), mWiiFlag(1), mUpdatingActors(false), mIntervalTime(0.2f), mCountTimer(0), mGameState(EStartwindow)
 {
 }
 
@@ -30,6 +32,8 @@ Prs Game::prs;
 
 char Game::command;
 bool Start_BGM = false;
+bool Game::collision = false;
+bool Game::isWiifit = false;
 
 cwiid_wiimote_t *wiimote = NULL; //WiiBalanceBoardの情報
 
@@ -60,6 +64,7 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		serverName = argv[1];
 		str2ba(argv[3], &bdaddr); //要調整必要、引数の取ったアドレスで渡す
+		isWiifit = true;
 	}
 
 	/* サーバーとの接続 */
@@ -88,17 +93,9 @@ bool Game::Initialize(int argc, char *argv[])
 
 	mTicksCount = SDL_GetTicks();
 
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		mRacer[i] = new Racer(this, i);
-	}
-	mPlayer = new Player(this, clientID);
 
-	class Stage *stage = new Stage(this);
+	class Startwindow *startwindow = new Startwindow(this);
 
-	mHUD = new HUD(this);
-
-	stage->SetStatrtPosition();
 
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
@@ -111,6 +108,14 @@ bool Game::Initialize(int argc, char *argv[])
 	mPlayer->SetPlayerState(Player::PlayerState::ERunning); // 後で消す
 
 	//ここからwiifitの初期化
+
+	if (isWiifit == false)
+	{
+		fputs("WiiFit is unable to connect\n", stderr);
+		wiifit_connect = false;
+		Client_command::Player_weight[clientID] = 50;
+		return true;
+	}
 
 	if ((wiimote = cwiid_open(&bdaddr, 0)) == NULL) //コネクトに必要な関数
 	{
@@ -278,6 +283,18 @@ void Game::ProcessInput()
 			default:
 				break;
 			}
+			if (!event.key.repeat)
+			{
+				if (!mUIStack.empty())
+					mUIStack.back()->HandleKeyPress(event.key.keysym.sym);
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (!mUIStack.empty())
+			{
+				mUIStack.back()->HandleKeyPress(event.button.button);
+			}
+			break;
 		}
 	}
 
@@ -325,7 +342,7 @@ void Game::UpdateGame()
 
 		mCommand->SendPosCommand();
 
-		for (int i = 0; i < MAX_CLIENTS; i++)
+		for (int i = 0; i < mNum; i++)
 		{
 			Vector2 pos;
 			float rot;
@@ -345,8 +362,9 @@ void Game::UpdateGame()
 			{
 				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Player_difference[clientID].x * deltaTime * 0.5f;
 				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Player_difference[clientID].y * deltaTime * 0.5f;
+				collision = true;
 			}
-			else
+			else if (collision == false)
 			{
 				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
 				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
@@ -361,6 +379,7 @@ void Game::UpdateGame()
 				Client_command::isRepulsion = false;
 				Client_command::Collisioned_oppnent = -1;
 				mCountTimer = 0;
+				collision = false;
 				Sound::Collision_Sound();
 
 				if (Client_command::isCollision == true)
@@ -370,7 +389,8 @@ void Game::UpdateGame()
 					pos.x = mCommand->PlayerPos[clientID].x;
 					pos.y = mCommand->PlayerPos[clientID].y;
 					mPlayer->SetPosition(pos);
-					mRacer[clientID]->SetPosition(pos);
+					//mRacer[clientID]->SetPosition(pos);
+					//Client_command::isCollision = false;
 				}
 			}
 		}
@@ -412,6 +432,7 @@ void Game::UpdateGame()
 			mCommand->isCollision = false;
 			Client_command::isRepulsion = true;
 		}
+
 		if (mCommand->isStart == true)
 		{
 			mPlayer->SetPlayerState(Player::PlayerState::ERunning);
@@ -467,6 +488,18 @@ void Game::UpdateGame()
 		{
 			++iter;
 		}
+	}
+
+	if (mCommand->isPreparing == false && mGameState == EWaitPlayer)
+	{
+		mGameState = ELoadStage;
+		mCommand->isPreparing = true;
+	}
+
+	if (mGameState == ELoadStage)
+	{
+		StartInitialize();
+		mGameState = ERunning;
 	}
 
 	if (mCommand->isFinish == true && mGameState == ERunning)
@@ -529,6 +562,21 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	LoadText("assets/texts/English.gptext");
+}
+
+void Game::StartInitialize()
+{
+	for (int i = 0; i < mNum; i++)
+	{
+		mRacer[i] = new Racer(this, i);
+	}
+	mPlayer = new Player(this, clientID);
+
+	class Stage *stage = new Stage(this);
+
+	mHUD = new HUD(this);
+
+	stage->SetStatrtPosition();
 }
 
 void Game::UnloadData()

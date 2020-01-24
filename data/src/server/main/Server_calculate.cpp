@@ -23,13 +23,23 @@ int Calculate::Player_restitution(CONTAINER Posdata)
     float mv1 = 0;                                             //衝突後の衝突した方の速度
     float mv2 = 0;                                             //衝突後の衝突された方の速度
     float m1 = Collision::PlayerPos[Posdata.Client_id].weight; //衝突した方の質量
-    float e = 0.5f;                                            //0<=e<=1の間の反発係数
+    float e = 0.1f;                                            //0<=e<=1の間の反発係数
 
     mv1 = ((m1 - e * m2) * v1 + (m2 + e * m2) * v2) / (m1 + m2);
-    mv2 = ((m2 - e * m1) * v2 - (m1 + e * m1) * v1) / (m1 + m2);
-    Server_command::Posdata.speed = mv1;
+    mv2 = ((m2 - e * m1) * v2 + (m1 + e * m1) * v1) / (m1 + m2);
+    /*マジックナンバーで処理*/
+    if (mv1 > 170)
+    {
+        mv1 = 165;
+    }
+    if (mv2 > 170)
+    {
+        mv2 = 165;
+    }
+    /***************************************/
+    Server_command::Posdata.speed = mv1 / 2;
 
-    SpeedStorage[Collision::collision_oppnent] = mv2;
+    SpeedStorage[Collision::collision_oppnent] = mv2 / 2;
 
     Collision::Player_Collision_Strage[Collision::collision_oppnent] = 1;
 }

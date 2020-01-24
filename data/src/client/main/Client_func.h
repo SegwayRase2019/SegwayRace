@@ -16,9 +16,11 @@ public:
   static float Player_weight[MAX_CLIENTS];
   void SendEndCommand(void);
   void SendPosCommand(void);
+  void SendWaitSignal(void);
   void SendStartSignal(void);
   void SendPosCommand_i(void);
 
+  static bool isPreparing;
   static bool isStart;
   static bool isGoal[MAX_CLIENTS];
   static bool isFinish;

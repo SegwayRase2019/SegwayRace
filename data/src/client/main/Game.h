@@ -14,6 +14,9 @@ class Game
 public:
   enum GameState
   {
+    EStartwindow,
+    EWaitPlayer,
+    ELoadStage,
     ERunning,
     EFinished
   };
@@ -45,6 +48,8 @@ public:
   static int clientID;
   static CONTAINER Player_difference[MAX_CLIENTS];
   static CONTAINER Collision_difference[MAX_CLIENTS];
+  static bool collision;
+  static bool isWiifit;
 
   // Getter
   class Client_net *GetClient_net(void) const { return mNet; }
@@ -53,6 +58,10 @@ public:
   class HUD *GetHUD(void) const { return mHUD; }
   int GetClientNum(void) const { return mNum; }
   int GetEndFlag(void) const { return mEndFlag; }
+  GameState GetGameState(void) const { return mGameState; }
+
+  // Setter
+  void SetGameState(GameState state) { mGameState = state; }
 
   class Racer *mRacer[MAX_CLIENTS];
   class Player *mPlayer;
@@ -87,6 +96,8 @@ private:
   void GenerateOutput();
   void LoadData();
   void UnloadData();
+  //StartRace
+  void StartInitialize();
 
   static int NetworkEvent(void *data);
 

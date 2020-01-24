@@ -215,7 +215,7 @@ int Server_net::MultiAccept(int request_soc, int num)
 void Server_net::Enter(int pos, int fd)
 {
 
-    printf("プレイヤーID%dさんが入室しました\n", pos);
+    printf("PlayerID%d is participation\n", pos);
 
     mClients[pos].fd = fd;
 }

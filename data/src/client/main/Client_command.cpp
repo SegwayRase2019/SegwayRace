@@ -10,6 +10,7 @@
 CONTAINER Posdata;
 CONTAINER Client_command::PlayerPos[MAX_CLIENTS];
 bool Client_command::isCollision;
+bool Client_command::isPreparing;
 bool Client_command::isStart;
 bool Client_command::isGoal[MAX_CLIENTS];
 bool Client_command::isFinish = false;
@@ -29,6 +30,7 @@ Client_command::Client_command(Game *game)
     : mGame(game)
 {
     isCollision = false;
+    isPreparing = true;
     isStart = false;
     isFinish = false;
     for (int i = 0; i < MAX_CLIENTS; i++)
@@ -76,6 +78,11 @@ int Client_command::ExecuteCommand()
 
     case PLAYER_RANKING:
         PlayerPos[Posdata.Client_id].rank = Posdata.rank;
+        break;
+
+    case WAIT_SIGNAL:
+        if (isPreparing == true)
+            isPreparing = false;
         break;
 
     case START_SIGNAL:
@@ -180,6 +187,16 @@ void Client_command::SendEndCommand(void)
     memset(&Posdata, 0, sizeof(CONTAINER));
 
     Posdata.Command = END_COMMAND;
+    Posdata.Client_id = Game::clientID;
+
+    /* データの送信 */
+    mClient_net->SendData(&Posdata, sizeof(CONTAINER));
+}
+
+void Client_command::SendWaitSignal()
+{
+    memset(&Posdata, 0, sizeof(CONTAINER));
+    Posdata.Command = WAIT_SIGNAL;
     Posdata.Client_id = Game::clientID;
 
     /* データの送信 */

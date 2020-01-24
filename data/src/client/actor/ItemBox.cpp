@@ -22,8 +22,7 @@ void ItemBox::UpdateActor(float deltaTime)
     if (Client_command::item_collision == true)
     {
         mGame->mPlayer->affected = true;
-
-        printf("ok\n");
+      
         mCountTime1 += deltaTime;
         if (mCountTime1 > mEffectTime)
         {
@@ -31,6 +30,7 @@ void ItemBox::UpdateActor(float deltaTime)
             Client_command::item_collision = false;
             mCountTime1 = 0;
         }
+
     }
     if (Client_command::item_exist == false)
     {
