@@ -94,12 +94,6 @@ bool Game::Initialize(int argc, char *argv[])
 	}
 	mPlayer = new Player(this, clientID);
 
-	class ItemBox *item = new ItemBox(this);
-	Vector2 itemPos;
-	itemPos.x = 1500;
-	itemPos.y = 0;
-	item->SetPosition(itemPos);
-
 	class Stage *stage = new Stage(this);
 
 	mHUD = new HUD(this);
@@ -108,6 +102,13 @@ bool Game::Initialize(int argc, char *argv[])
 
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
+
+	mItem = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	mItem->SetPosition(itemPos);
+	mPlayer->SetPlayerState(Player::PlayerState::ERunning); // 後で消す
 
 	//ここからwiifitの初期化
 

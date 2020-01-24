@@ -47,6 +47,7 @@ typedef struct
     float speed;
     float weight = 50;
     bool Item_effect = false;
+    bool Item_exist = true;
 } CONTAINER;
 
 typedef struct
