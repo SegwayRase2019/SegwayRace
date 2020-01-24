@@ -48,6 +48,8 @@ public:
   static int clientID;
   static CONTAINER Player_difference[MAX_CLIENTS];
   static CONTAINER Collision_difference[MAX_CLIENTS];
+  static bool collision;
+  static bool isWiifit;
 
   // Getter
   class Client_net *GetClient_net(void) const { return mNet; }
