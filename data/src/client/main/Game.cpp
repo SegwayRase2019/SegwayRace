@@ -32,6 +32,8 @@ Prs Game::prs;
 
 char Game::command;
 bool Start_BGM = false;
+bool Game::collision = false;
+bool Game::isWiifit = false;
 
 cwiid_wiimote_t *wiimote = NULL; //WiiBalanceBoardの情報
 
@@ -62,6 +64,7 @@ bool Game::Initialize(int argc, char *argv[])
 	{
 		serverName = argv[1];
 		str2ba(argv[3], &bdaddr); //要調整必要、引数の取ったアドレスで渡す
+		isWiifit = true;
 	}
 
 	/* サーバーとの接続 */
@@ -102,6 +105,12 @@ bool Game::Initialize(int argc, char *argv[])
 	sound->Sound_Initialize();
 
 	//ここからwiifitの初期化
+
+	if (isWiifit == false)
+	{
+		fputs("WiiFit is unable to connect\n", stderr);
+		return true;
+	}
 
 	if ((wiimote = cwiid_open(&bdaddr, 0)) == NULL) //コネクトに必要な関数
 	{
@@ -348,8 +357,9 @@ void Game::UpdateGame()
 			{
 				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Player_difference[clientID].x * deltaTime * 0.5f;
 				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Player_difference[clientID].y * deltaTime * 0.5f;
+				collision = true;
 			}
-			else
+			else if (collision == false)
 			{
 				mCommand->PlayerPos[clientID].x -= Client_command::Back_speed * Collision_difference[clientID].x * deltaTime * 0.5f;
 				mCommand->PlayerPos[clientID].y -= Client_command::Back_speed * Collision_difference[clientID].y * deltaTime * 0.5f;
@@ -364,6 +374,7 @@ void Game::UpdateGame()
 				Client_command::isRepulsion = false;
 				Client_command::Collisioned_oppnent = -1;
 				mCountTimer = 0;
+				collision = false;
 				Sound::Collision_Sound();
 
 				if (Client_command::isCollision == true)
@@ -373,7 +384,8 @@ void Game::UpdateGame()
 					pos.x = mCommand->PlayerPos[clientID].x;
 					pos.y = mCommand->PlayerPos[clientID].y;
 					mPlayer->SetPosition(pos);
-					mRacer[clientID]->SetPosition(pos);
+					//mRacer[clientID]->SetPosition(pos);
+					//Client_command::isCollision = false;
 				}
 			}
 		}
@@ -415,6 +427,7 @@ void Game::UpdateGame()
 			mCommand->isCollision = false;
 			Client_command::isRepulsion = true;
 		}
+
 		if (mCommand->isStart == true)
 		{
 			mPlayer->SetPlayerState(Player::PlayerState::ERunning);
