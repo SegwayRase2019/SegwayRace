@@ -109,6 +109,8 @@ bool Game::Initialize(int argc, char *argv[])
 	if (isWiifit == false)
 	{
 		fputs("WiiFit is unable to connect\n", stderr);
+		wiifit_connect = false;
+		Client_command::Player_weight[clientID] = 50;
 		return true;
 	}
 

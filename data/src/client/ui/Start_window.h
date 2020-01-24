@@ -16,4 +16,5 @@ private:
   SDL_Texture *mPlTex;
   SDL_Texture *mText;
   SDL_Texture *mPushText;
+  SDL_Texture *mWiiText;
 };
