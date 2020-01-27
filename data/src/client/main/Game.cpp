@@ -35,6 +35,7 @@ bool Start_BGM = false;
 bool Game::collision = false;
 bool Game::isWiifit = false;
 
+cwiid_mesg_callback_t cwiid_callback;
 cwiid_wiimote_t *wiimote = NULL; //WiiBalanceBoardの情報
 
 bool Game::Initialize(int argc, char *argv[])
@@ -52,26 +53,36 @@ bool Game::Initialize(int argc, char *argv[])
 	struct balance_cal balance_cal; //各バランスボードの調整用の値の取得
 
 	/* 引き数チェック */
-	if (argc == 1)
+	switch (argc)
+	{
+	case 1:
 	{
 		serverName = localHostName;
+		break;
 	}
-	else if (argc == 2)
+	case 2:
 	{
 		serverName = argv[1];
+		break;
 	}
-	else if (argc == 3)
+	case 3:
 	{
 		serverName = argv[1];
-		str2ba(argv[3], &bdaddr); //要調整必要、引数の取ったアドレスで渡す
+		str2ba(argv[2], &bdaddr); //要調整必要、引数の取ったアドレスで渡す
 		isWiifit = true;
+		break;
 	}
+	default:
+		break;
+	}
+
+	//"8C:CD:E8:9D:0D:92"
 
 	/* サーバーとの接続 */
 	if (mNet->SetUpClient(serverName, &clientID, &mNum, name) == -1)
 	{
 		fprintf(stderr, "Setup failed : SetUpClient\n");
-		return -1;
+		return false;
 	}
 	/* ウインドウの初期化 */
 	if (!mWindow->InitWindows(clientID, mNum, name))
@@ -92,8 +103,12 @@ bool Game::Initialize(int argc, char *argv[])
 	thr = SDL_CreateThread(Game::NetworkEvent, "NetworkThread", &mEndFlag);
 
 	mTicksCount = SDL_GetTicks();
-
-	class Startwindow *startwindow = new Startwindow(this);
+	/*
+	if ((cwiid_open(&bdaddr, 0)) == NULL)
+	{
+		isWiifit = false;
+	}
+	*/
 
 	// class ItemBox *item = new ItemBox(this);
 	// Vector2 itemPos;
@@ -106,43 +121,38 @@ bool Game::Initialize(int argc, char *argv[])
 
 	//ここからwiifitの初期化
 
-	if (isWiifit == false)
-	{
-		fputs("WiiFit is unable to connect\n", stderr);
-		wiifit_connect = false;
-		Client_command::Player_weight[clientID] = 50;
-		return true;
-	}
-
-	if ((wiimote = cwiid_open(&bdaddr, 0)) == NULL) //コネクトに必要な関数
+	if (!(wiimote = cwiid_open(&bdaddr, 0))) //コネクトに必要な関数
 	{
 		fputs("Unable to connect\n", stderr);
 		wiifit_connect = false;
+		isWiifit = false;
 		Client_command::Player_weight[clientID] = 50;
-		return true;
 	}
-	fputs("Wiifit_connected\n", stdout);
 
-	sleep(1); //一秒止まる(ここは消しても良い)
-
-	if (cwiid_set_led(wiimote, 1)) //正直どっちでもいい
-		fputs("Unable to set LED state\n", stderr);
-
-	if (cwiid_get_balance_cal(wiimote, &balance_cal)) //これはバグっていたら大変
-		fputs("unable to retrieve balance calibration\n", stderr);
-
-	if (cwiid_set_mesg_callback(wiimote, cwiid_callback)) //これは必須
-		fputs("cannot set callback. buttons won't work.\n", stderr);
-
-	if (cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC)) //これも接続に必須
-		fputs("cannot enable callback. buttons won't work.\n", stderr);
-
-	if (cwiid_set_rpt_mode(wiimote,
-						   CWIID_RPT_ACC | CWIID_RPT_STATUS | CWIID_RPT_EXT)) //これも必須
-		fputs("cannot set report mode. buttons won't work.\n", stderr);
+	class Startwindow *startwindow = new Startwindow(this);
 
 	if (wiifit_connect == true)
 	{
+		fputs("Wiifit_connected\n", stdout);
+
+		sleep(1); //一秒止まる(ここは消しても良い)
+
+		if (cwiid_set_led(wiimote, 1)) //正直どっちでもいい
+			fputs("Unable to set LED state\n", stderr);
+
+		if (cwiid_get_balance_cal(wiimote, &balance_cal)) //これはバグっていたら大変
+			fputs("unable to retrieve balance calibration\n", stderr);
+
+		if (cwiid_set_mesg_callback(wiimote, cwiid_callback)) //これは必須
+			fputs("cannot set callback. buttons won't work.\n", stderr);
+
+		if (cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC)) //これも接続に必須
+			fputs("cannot enable callback. buttons won't work.\n", stderr);
+
+		if (cwiid_set_rpt_mode(wiimote,
+							   CWIID_RPT_ACC | CWIID_RPT_STATUS | CWIID_RPT_EXT)) //これも必須
+			fputs("cannot set report mode. buttons won't work.\n", stderr);
+
 		wii_fit_thr = SDL_CreateThread(Game::Wiifit_Thread, "Wiifit_Thread", &mWiiFlag);
 	}
 
