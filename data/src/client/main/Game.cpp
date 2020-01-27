@@ -103,21 +103,16 @@ bool Game::Initialize(int argc, char *argv[])
 	thr = SDL_CreateThread(Game::NetworkEvent, "NetworkThread", &mEndFlag);
 
 	mTicksCount = SDL_GetTicks();
-	/*
-	if ((cwiid_open(&bdaddr, 0)) == NULL)
-	{
-		isWiifit = false;
-	}
-	*/
-
-	// class ItemBox *item = new ItemBox(this);
-	// Vector2 itemPos;
-	// itemPos.x = 1500;
-	// itemPos.y = 0;
-	// item->SetPosition(itemPos);
 
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
+
+	mItem = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	mItem->SetPosition(itemPos);
+	mPlayer->SetPlayerState(Player::PlayerState::ERunning); // 後で消す
 
 	//ここからwiifitの初期化
 

@@ -164,9 +164,10 @@ int Collision::Collision_item(CONTAINER Posdata)
 
     float Item_distance = std::sqrt((a * a) + (b * b));
 
-    if (Item_distance < radious)
+    if (Item_distance < radious && Server_command::Posdata.Item_exist == true)
     {
         Server_command::Posdata.Item_effect = true;
+        Server_command::Posdata.Item_exist = false;
         //Idata.Exist = false;
         printf("itemcollision\n");
         Server_command::Posdata.Command = ITEM_COLLISION;

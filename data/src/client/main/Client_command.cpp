@@ -23,6 +23,7 @@ int Client_command::Collisioned_oppnent = -1;
 float Client_command::Player_weight[MAX_CLIENTS];
 bool Client_command::Oppnent = false;
 bool Client_command::item_collision = false;
+bool Client_command::item_exist = true;
 //ITEM Idata;
 
 Client_command::Client_command(Game *game)
@@ -93,6 +94,7 @@ int Client_command::ExecuteCommand()
 
     case ITEM_COLLISION:
         item_collision = Posdata.Item_effect;
+        item_exist = Posdata.Item_exist;
         break;
 
     case GOAL_SIGNAL:
@@ -120,6 +122,8 @@ int Client_command::ExecuteCommand()
 
 void Client_command::SendPosCommand(void)
 {
+    Actor::State state = mGame->mItem->GetState();
+
     Vector2 pos = mGame->mPlayer->GetPosition();
 
     memset(&Posdata, 0, sizeof(CONTAINER));
@@ -133,6 +137,19 @@ void Client_command::SendPosCommand(void)
     Posdata.speed = MoveComponent::mForwardSpeed;
     Posdata.weight = Player_weight[Game::clientID];
     Posdata.Item_effect = item_collision;
+    switch (state)
+    {
+    case 0:
+    {
+        Posdata.Item_exist = true;
+        break;
+    }
+    case 1:
+    {
+        Posdata.Item_exist = false;
+        break;
+    }
+    }
 
     /*データの送信*/
     mClient_net->SendData(&Posdata, sizeof(CONTAINER));

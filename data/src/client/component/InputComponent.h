@@ -8,7 +8,7 @@ class InputComponent : public MoveComponent
 {
   public:
 	// Lower update order to update first
-	InputComponent(class Actor *owner);
+	InputComponent(class Actor *owner, class Player *player);
 
 	void ProcessInput(const uint8_t *keyState) override;
 
@@ -39,4 +39,5 @@ class InputComponent : public MoveComponent
 	// Keys for angular movement
 	int mClockwiseKey;
 	int mCounterClockwiseKey;
+	class Player *mPlayer;
 };
