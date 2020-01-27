@@ -60,9 +60,9 @@ int Calculate::Stage_rank(CONTAINER Posdata) //反時計回りを想定
         {
             Server_command::Posdata.rank = j + 1;
 
-            if (Backup_degree[Server_command::Posdata.Client_id] < 90.0f && Player_angle_copy[Server_command::Posdata.Client_id] >= 90.0f)
+            if (Backup_degree[Server_command::Posdata.Client_id] < 360.0f && Player_angle_copy[Server_command::Posdata.Client_id] >= 360.0f)
             {
-                if (Backup_degree[Server_command::Posdata.Client_id] > 85.0f && Player_angle_copy[Server_command::Posdata.Client_id] < 95.0f)
+                if (Backup_degree[Server_command::Posdata.Client_id] > 355.0f && Player_angle_copy[Server_command::Posdata.Client_id] < 365.0f)
                 {
                     if (Server_command::Goal_Status[Server_command::Posdata.Client_id] != true)
                     {
