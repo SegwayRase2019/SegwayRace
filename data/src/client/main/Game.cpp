@@ -58,11 +58,13 @@ bool Game::Initialize(int argc, char *argv[])
 	case 1:
 	{
 		serverName = localHostName;
+		isWiifit = false;
 		break;
 	}
 	case 2:
 	{
 		serverName = argv[1];
+		isWiifit = false;
 		break;
 	}
 	case 3:
@@ -108,6 +110,15 @@ bool Game::Initialize(int argc, char *argv[])
 	sound->Sound_Initialize();
 
 	//ここからwiifitの初期化
+	if (isWiifit == false)
+	{
+		fputs("Unable to connect\n", stderr);
+		wiifit_connect = false;
+		isWiifit = false;
+		Client_command::Player_weight[clientID] = 50;
+		class Startwindow *startwindow = new Startwindow(this);
+		return true;
+	}
 
 	if (!(wiimote = cwiid_open(&bdaddr, 0))) //コネクトに必要な関数
 	{
