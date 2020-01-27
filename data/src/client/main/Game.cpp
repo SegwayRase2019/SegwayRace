@@ -107,13 +107,6 @@ bool Game::Initialize(int argc, char *argv[])
 	class Sound *sound = new Sound(this);
 	sound->Sound_Initialize();
 
-	mItem = new ItemBox(this);
-	Vector2 itemPos;
-	itemPos.x = 1500;
-	itemPos.y = 0;
-	mItem->SetPosition(itemPos);
-	mPlayer->SetPlayerState(Player::PlayerState::ERunning); // 後で消す
-
 	//ここからwiifitの初期化
 
 	if (!(wiimote = cwiid_open(&bdaddr, 0))) //コネクトに必要な関数
@@ -579,6 +572,12 @@ void Game::StartInitialize()
 	mHUD = new HUD(this);
 
 	stage->SetStatrtPosition();
+
+	mItem = new ItemBox(this);
+	Vector2 itemPos;
+	itemPos.x = 1500;
+	itemPos.y = 0;
+	mItem->SetPosition(itemPos);
 }
 
 void Game::UnloadData()
