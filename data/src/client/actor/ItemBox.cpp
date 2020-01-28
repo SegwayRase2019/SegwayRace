@@ -7,7 +7,7 @@
 #include "../main/Client_func.h"
 
 ItemBox::ItemBox(Game *game, int id)
-    : Actor(game), mIntervalTime(5), mCountTime(0), mEffectTime(5), mCountTime1(0), mId(id)
+    : Actor(game), mIntervalTime(5), mCountTime(0), mEffectTime(3), mCountTime1(0), mId(id)
 {
     SpriteComponent *sc = new SpriteComponent(this, 50);
     sc->SetTexture(game->GetClient_window()->GetTexture("assets/images/ItemBox.png"));
