@@ -15,7 +15,7 @@ void InputComponent::ProcessInput(const uint8_t *keyState)
 {
 	if (mPlayer->affected == true)
 	{
-		mMaxForwardSpeed = mPlayer->addforce * 2 * (1 + mOwner->GetGame()->GetClient_command()->PlayerPos[mOwner->GetGame()->clientID].rank * 0.3);
+		mMaxForwardSpeed = mPlayer->addforce * 1.5 * (1 + mOwner->GetGame()->GetClient_command()->PlayerPos[mOwner->GetGame()->clientID].rank * 0.2);
 	}
 	else if (mPlayer->affected == false)
 	{
