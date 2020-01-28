@@ -116,7 +116,7 @@ void Sound::Curve_Sound()
 
 void Sound::Collision_Sound()
 {
-    collision_bgm = Mix_LoadWAV("assets/musics/Racing01.wav");
+    collision_bgm = Mix_LoadWAV("assets/musics/car-accident.wav");
     if (collision_bgm == NULL)
     {
         SDL_Log("Failed to load music file %s", SDL_GetError());
@@ -126,18 +126,20 @@ void Sound::Collision_Sound()
 
 void Sound::Goal_Music()
 {
-    bgm = Mix_LoadMUS("assets/musics/sample.mp3");
-    if (bgm == NULL)
+    Mix_FreeMusic(bgm);
+
+    Mix_Chunk *Goal_Chunk;
+    Goal_Chunk = Mix_LoadWAV("assets/musics/Goal.wav");
+    if (Goal_Chunk == NULL)
     {
         SDL_Log("Failed to load music file %s", SDL_GetError());
     }
-
-    Mix_PlayMusic(bgm, -1);
+    Mix_PlayChannel(1, Goal_Chunk, 0);
 }
 
 void Sound::ResultMusic()
 {
-    bgm = Mix_LoadMUS("assets/musics/sample.mp3");
+    bgm = Mix_LoadMUS("assets/musics/result.mp3");
 
     if (bgm == NULL)
     {
