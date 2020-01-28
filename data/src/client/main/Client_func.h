@@ -32,7 +32,7 @@ public:
   static bool isCollision;
   static CONTAINER CollisionPos[MAX_CLIENTS];
   static bool item_collision;
-  static bool item_exist;
+  static bool item_exist[ITEM];
 
 private:
   class Game *mGame;

@@ -153,23 +153,27 @@ int Collision::Collision_item(CONTAINER Posdata)
     //アイテムの座標を入れる
     // Item_coordinate.x = Server_command::Idata.x;
     // Item_coordinate.y = Server_command::Idata.y;
-    Item_coordinate.x = 1500;
-    Item_coordinate.y = 0;
-    Posdata.Item_effect = false;
+
+    //Posdata.Item_effect = false;
 
     float radious = 70; //半径
 
-    float a = std::abs(Posdata.x - Item_coordinate.x);
-    float b = std::abs(Posdata.y - Item_coordinate.y);
-
-    float Item_distance = std::sqrt((a * a) + (b * b));
-
-    if (Item_distance < radious && Server_command::Posdata.Item_exist == true)
+    for (int i = 0; i < ITEM; i++)
     {
-        Server_command::Posdata.Item_effect = true;
-        Server_command::Posdata.Item_exist = false;
-        //Idata.Exist = false;
-        printf("itemcollision\n");
-        Server_command::Posdata.Command = ITEM_COLLISION;
+        Item_coordinate.x = 1000 + i * 200;
+        Item_coordinate.y = -1000;
+        float a = std::abs(Posdata.x - Item_coordinate.x);
+        float b = std::abs(Posdata.y - Item_coordinate.y);
+
+        float Item_distance = std::sqrt((a * a) + (b * b));
+
+        if (Item_distance < radious && Server_command::Posdata.Item_exist[i] == true)
+        {
+            Server_command::Posdata.Item_effect = true;
+            Server_command::Posdata.Item_exist[i] = false;
+            //Idata.Exist = false;
+            printf("itemcollision\n");
+            Server_command::Posdata.Command = ITEM_COLLISION;
+        }
     }
 }

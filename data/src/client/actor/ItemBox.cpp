@@ -6,8 +6,8 @@
 #include "./Player.h"
 #include "../main/Client_func.h"
 
-ItemBox::ItemBox(Game *game)
-    : Actor(game), mIntervalTime(5), mCountTime(0), mEffectTime(5), mCountTime1(0)
+ItemBox::ItemBox(Game *game, int id)
+    : Actor(game), mIntervalTime(5), mCountTime(0), mEffectTime(5), mCountTime1(0), mId(id)
 {
     SpriteComponent *sc = new SpriteComponent(this, 50);
     sc->SetTexture(game->GetClient_window()->GetTexture("assets/images/ItemBox.png"));
@@ -22,7 +22,7 @@ void ItemBox::UpdateActor(float deltaTime)
     if (Client_command::item_collision == true)
     {
         mGame->mPlayer->affected = true;
-      
+
         mCountTime1 += deltaTime;
         if (mCountTime1 > mEffectTime)
         {
@@ -30,19 +30,20 @@ void ItemBox::UpdateActor(float deltaTime)
             Client_command::item_collision = false;
             mCountTime1 = 0;
         }
-
     }
-    if (Client_command::item_exist == false)
+
+    if (Client_command::item_exist[mId] == false)
     {
         Actor::SetState(EInactive);
         mCountTime += deltaTime;
         if (mCountTime > mIntervalTime)
         {
             Actor::SetState(EActive);
-            Client_command::item_exist = true;
+            Client_command::item_exist[mId] = true;
             mCountTime = 0;
         }
     }
+
     if (Actor::GetState() == EInactive)
     {
     }
