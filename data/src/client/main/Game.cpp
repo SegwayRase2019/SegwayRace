@@ -588,7 +588,7 @@ void Game::StartInitialize()
 	for (int i = 0; i < ITEM; i++)
 	{
 		mItem[i] = new ItemBox(this, i);
-		itemPos.x = 1000 + i * 200;
+		itemPos.x = -1000 + i * -200;
 		itemPos.y = -1000;
 		mItem[i]->SetPosition(itemPos);
 	}

@@ -160,7 +160,7 @@ int Collision::Collision_item(CONTAINER Posdata)
 
     for (int i = 0; i < ITEM; i++)
     {
-        Item_coordinate.x = 1000 + i * 200;
+        Item_coordinate.x = -1000 + i * -200;
         Item_coordinate.y = -1000;
         float a = std::abs(Posdata.x - Item_coordinate.x);
         float b = std::abs(Posdata.y - Item_coordinate.y);
