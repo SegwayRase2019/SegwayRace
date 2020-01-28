@@ -4,6 +4,7 @@
 #include "../../common/Common.h"
 #include "../../common/math/Math.h"
 #include "../actor/Player.h"
+#include "../main/Client_func.h"
 
 InputComponent::InputComponent(class Actor *owner, class Player *player)
 	: MoveComponent(owner), mForwardKey(0), mBackKey(0), mClockwiseKey(0), mCounterClockwiseKey(0), mPlayer(player)
@@ -14,11 +15,11 @@ void InputComponent::ProcessInput(const uint8_t *keyState)
 {
 	if (mPlayer->affected == true)
 	{
-		mMaxForwardSpeed = mPlayer->addforce * 2;
+		mMaxForwardSpeed = mPlayer->addforce * 2 * (1 + mOwner->GetGame()->GetClient_command()->PlayerPos[mOwner->GetGame()->clientID].rank * 0.3);
 	}
 	else if (mPlayer->affected == false)
 	{
-		mMaxForwardSpeed = mPlayer->addforce;
+		mMaxForwardSpeed = mPlayer->addforce * (1 + mOwner->GetGame()->GetClient_command()->PlayerPos[mOwner->GetGame()->clientID].rank * 0.1);
 	}
 
 	if (mOwner->Actor::GetGame()->wiifit_connect == false)
