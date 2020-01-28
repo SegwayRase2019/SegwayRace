@@ -584,11 +584,14 @@ void Game::StartInitialize()
 
 	stage->SetStatrtPosition();
 
-	mItem = new ItemBox(this);
 	Vector2 itemPos;
-	itemPos.x = 1500;
-	itemPos.y = 0;
-	mItem->SetPosition(itemPos);
+	for (int i = 0; i < ITEM; i++)
+	{
+		mItem[i] = new ItemBox(this, i);
+		itemPos.x = 1000 + i * 200;
+		itemPos.y = -1000;
+		mItem[i]->SetPosition(itemPos);
+	}
 }
 
 void Game::UnloadData()

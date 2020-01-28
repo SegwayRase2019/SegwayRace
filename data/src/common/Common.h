@@ -37,6 +37,8 @@
 #define ITEM_COLLISION 'I'
 #define FINISH_COMMAND 'F' /*プレイヤが全員ゴールしたことを通知*/
 
+#define ITEM 4 /*アイテムの数*/
+
 typedef struct
 {
     float x = 0;
@@ -48,7 +50,7 @@ typedef struct
     float speed;
     float weight = 50;
     bool Item_effect = false;
-    bool Item_exist = true;
+    bool Item_exist[ITEM] = {true, true, true, true};
 } CONTAINER;
 
 typedef struct
