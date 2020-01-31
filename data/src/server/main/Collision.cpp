@@ -172,7 +172,6 @@ int Collision::Collision_item(CONTAINER Posdata)
             Server_command::Posdata.Item_effect = true;
             Server_command::Posdata.Item_exist[i] = false;
             //Idata.Exist = false;
-            printf("itemcollision\n");
             Server_command::Posdata.Command = ITEM_COLLISION;
         }
     }

@@ -107,7 +107,6 @@ int Client_command::ExecuteCommand()
     case GOAL_SIGNAL:
         if (isGoal[Posdata.Client_id] == false)
         {
-            printf("GoalID:%d\n", Posdata.Client_id);
             isGoal[Posdata.Client_id] = true;
             if (Posdata.Client_id == Game::clientID)
             {
