@@ -7,6 +7,7 @@
 #include "../ui/HUD.h"
 #include "../ui/Start_window.h"
 #include "../ui/Wait_window.h"
+#include "../ui/GoalUI.h"
 #include "../ui/Resultwindow.h"
 #include "../actor/ItemBox.h"
 #include "../../../libraries/rapidjson/document.h"
@@ -422,21 +423,14 @@ void Game::UpdateGame()
 
 			mCommand->isCollision = false;
 			Client_command::isRepulsion = true;
-			if (mCommand->isStart == true)
-				mPlayer->SetPlayerState(Player::PlayerState::ERunning);
-			if (mCommand->isGoal[clientID] == true)
-			{
-				mPlayer->SetPlayerState(Player::PlayerState::EGoal);
-				mCommand->isStart = false;
-			}
-
-			pos.x = mCommand->PlayerPos[clientID].x;
-			pos.y = mCommand->PlayerPos[clientID].y;
-			mPlayer->SetPosition(pos);
-			mPlayer->SetRotation(mCommand->PlayerPos[clientID].rot);
-
-			mCommand->isCollision = false;
-			Client_command::isRepulsion = true;
+		}
+		if (mCommand->isStart == true)
+			mPlayer->SetPlayerState(Player::PlayerState::ERunning);
+		if (mCommand->isGoal[clientID] == true && mPlayer->GetPlayerState() != Player::PlayerState::EGoal)
+		{
+			mPlayer->SetPlayerState(Player::PlayerState::EGoal);
+			mCommand->isStart = false;
+			class GoalUI *goalUI = new GoalUI(this);
 		}
 
 		if (mCommand->isStart == true)
