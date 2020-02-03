@@ -14,6 +14,7 @@ ItemBox::ItemBox(Game *game, int id)
     //ItemComponent *itc = new ItemComponent(this);
     Vector2 startpos(1500, -100);
     SetPosition(startpos);
+    SetRotation(Math::Pi);
 }
 
 void ItemBox::UpdateActor(float deltaTime)
